@@ -1,0 +1,38 @@
+<div class="flex max-w-full flex-wrap items-end gap-4 py-3">
+    <%= user_fields.label :first_name, class: 'flex flex-col min-w-40 flex-1' do %>
+      <p class="text-neutral-dark text-base font-medium leading-normal pb-2">
+        <%= t('patients.first_name') %>
+      </p>
+      <%= user_fields.text_field :first_name, class: 'form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-neutral-dark focus:outline-0 focus:ring-0 border border-primary bg-slate-50 focus:border-primary h-14 placeholder:text-neutral-dark p-2 text-base font-normal leading-normal bg-white' %>
+    <% end %>
+</div>
+
+<div class="flex max-w-full flex-wrap items-end gap-4 py-3">
+    <%= user_fields.label :last_name, class: 'flex flex-col min-w-40 flex-1' do %>
+      <p class="text-neutral-dark text-base font-medium leading-normal pb-2">
+        <%= t('patients.last_name') %>
+      </p>
+      <%= user_fields.text_field :last_name, class: 'form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-neutral-dark focus:outline-0 focus:ring-0 border border-primary bg-slate-50 focus:border-primary h-14 placeholder:text-neutral-dark p-2 text-base font-normal leading-normal bg-white' %>
+    <% end %>
+</div>
+
+<div class="flex max-w-full flex-wrap items-end gap-4 py-3">
+    <%= user_fields.label :birthdate, class: 'flex flex-col min-w-40 flex-1' do %>
+      <p class="text-neutral-dark text-base font-medium leading-normal pb-2">
+        <%= t('patients.birthdate') %>
+      </p>
+      <%= user_fields.date_field :birthdate, class: 'form-input  w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-neutral-dark focus:outline-0 focus:ring-0 border border-primary bg-slate-50 focus:border-primary h-14 placeholder:text-neutral-dark p-2 text-base font-normal leading-normal bg-white' %>
+    <% end %>
+</div>
+
+<div class="flex max-w-full flex-wrap items-end gap-4 py-3">
+    <%= user_fields.label :email, class: 'flex flex-col min-w-40 flex-1' do %>
+      <p class="text-neutral-dark text-base font-medium leading-normal pb-2">
+        <%= t('patients.email') %>
+      </p>
+      <%= user_fields.email_field :email, class: 'form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-neutral-dark focus:outline-0 focus:ring-0 border border-primary bg-slate-50 focus:border-primary h-14 placeholder:text-neutral-dark p-2 text-base font-normal leading-normal bg-white' %>
+    <% end %>
+</div>
+<div class="flex max-w-full flex-wrap items-end gap-4 py-3">
+</div>
+

@@ -1,0 +1,21 @@
+<tr class="border-t border-">
+  <td class="px-5 py-5 bg-white rounded-bl-xl">
+    <%= routine.name %>
+  </td>
+  <td class="px-5 py-5 bg-white">
+    <%= "#{date_to_human(routine.start_at)} - #{date_to_human(routine.end_at)}" %>
+  </td>
+  <td class="px-5 py-5 bg-white">
+    <%= routine.status %>
+  </td>
+  <td class="px-5 py-5 bg-white">
+    <%= routine.accuracy_score %>
+  </td>
+  <td class="px-5 py-5 bg-white">
+    <%= routine.exercises.count %>
+  </td>
+  <td class="px-5 py-5 bg-white rounded-br-xl">
+    <%= link_to t('buttons.edit'), edit_routine_path(routine), class: "bg-accent text-white font-bold py-2 px-4 rounded-xl border border-accent hover:bg-background hover:text-accent" %>
+    <!-- <%= link_to t('buttons.delete'), routine, method: :delete, data: { confirm: 'Are you sure you want to delete this routine?' }, class: "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" %> -->
+  </td>
+</tr>

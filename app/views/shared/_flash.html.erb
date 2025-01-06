@@ -1,0 +1,8 @@
+<% flash.each do |type, message| %>
+  <div class="<%= flash_class(type) %> mx-5 mt-5 px-4 py-3 rounded relative rounded-xl" role="alert">
+    <strong class="font-bold"><%= message %></strong>
+    <span class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentElement.style.display='none';">
+      <svg class="fill-current h-6 w-6 text-white" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 12.246l-2.651 2.603a1.2 1.2 0 1 1-1.697-1.697l2.603-2.651-2.603-2.651a1.2 1.2 0 1 1 1.697-1.697L10 8.754l2.651-2.603a1.2 1.2 0 1 1 1.697 1.697L11.697 10l2.603 2.651a1.2 1.2 0 0 1 0 1.697z"/></svg>
+    </span>
+  </div>
+<% end %>
