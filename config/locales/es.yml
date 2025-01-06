@@ -1,0 +1,254 @@
+es:
+  activerecord:
+    models:
+      user: "Usuario"
+      routine: "Rutina"
+      exercise: "Ejercicio"
+    attributes:
+      user:
+        first_name: "Nombre"
+        last_name: "Apellidos"
+        birthdate: "Fecha de Nacimiento"
+        email: "Correo Electrónico"
+      routine:
+        name: "Nombre"
+        description: "Descripción"
+        start_at: "Fecha Inicio"
+        end_at: "Fecha Fin"
+        patient: "Paciente"
+        patient_id: "Paciente"
+    errors:
+      models:
+        user:
+          attributes:
+            first_name:
+              blank: "no puede estar en blanco"
+            last_name:
+              blank: "no puede estar en blanco"
+            birthdate:
+              blank: "no puede estar en blanco"
+            email:
+              blank: "no puede estar en blanco"
+              invalid: "no es válido"
+        routine:
+          attributes:
+            name:
+              blank: "no puede estar en blanco"
+            start_at:
+              blank: "no puede estar en blanco"
+            patient:
+              required: "debe estar asociado a la rutina"
+            patient_id:
+              blank: "no ha sido seleccionado"
+        exercise:
+          attributes:
+            name:
+              blank: "no puede estar en blanco"
+            description:
+              blank: "no puede estar en blanco"
+  buttons:
+    save: "Guardar"
+    cancel: "Cancelar"
+    edit: "Editar"
+    delete: "Eliminar"
+    new: "Nuevo"
+    back: "Volver"
+  values:
+    boolean:
+      true: "Sí"
+      false: "No"
+  navbar:
+    profile: "Perfil"
+    change_password: "Cambiar Contraseña"
+    sign_out: "Cerrar sesión"
+  sidebar:
+    home: "Inicio"
+    patients: "Pacientes"
+    routines: "Rutinas"
+    exercises: "Ejercicios"
+  breadcrumbs:
+    home: "Inicio"
+    patients: "Pacientes"
+    new_patient: "Nuevo Paciente"
+    edit_patient: "Editar Paciente"
+    routines: "Rutinas"
+    new_routine: "Nueva Rutina"
+    edit_routine: "Editar Rutina"
+    exercises: "Ejercicios"
+    new_exercise: "Nuevo Ejercicio"
+    edit_exercise: "Editar Ejercicio"
+  patients:
+    new_patient: "Nuevo paciente"
+    name: "Nombre"
+    age: "Edad"
+    terms_and_conditions: "Términos y condiciones"
+    routines: "Rutinas"
+    actions: "Acciones"
+    title: "Nuevo Paciente"
+    first_name: "Nombre"
+    last_name: "Apellidos"
+    birthdate: "Fecha de Nacimiento"
+    email: "Correo Electrónico"
+    submit: "Crear Paciente"
+    update: "Actualizar Paciente"
+    errors: "No se pudo actualizar al paciente debido a los siguientes errores:"
+    flash:
+      create:
+        success: "Paciente creado exitosamente."
+        error: "Hubo un error al crear el paciente."
+      update:
+        success: "Paciente actualizado exitosamente."
+        error: "Hubo un error al actualizar el paciente."
+  routines:
+    new_routine: "Nueva Rutina"
+    name: "Nombre"
+    placeholder_name: "Semana 1"
+    description: "Descripción"
+    start_at: "Fecha Inicio"
+    end_at: "Fecha Fin"
+    dates: "Fechas"
+    status: "Estado"
+    accuracy_score: "Precisión"
+    exercises: "Ejercicios"
+    actions: "Acciones"
+    title: "Nueva Rutina"
+    submit: "Crear Rutina"
+    update: "Actualizar Rutina"
+    errors: "No se pudo actualizar la rutina debido a los siguientes errores:"
+    patient: "Paciente"
+    pacient_id: "Paciente"
+    select_patient: "Selecciona un paciente"
+    flash:
+      create:
+        success: "Rutina creada exitosamente."
+        error: "Hubo un error al crear la rutina."
+      update:
+        success: "Rutina actualizada exitosamente."
+        error: "Hubo un error al actualizar la rutina."
+  exercises:
+    new_exercise: "Nuevo Ejercicio"
+    name: "Nombre"
+    description: "Descripción"
+    placeholder_name: "Ejercicio 1"
+    placeholder_description: "Descripción del ejercicio"
+    actions: "Acciones"
+    title: "Nuevo Ejercicio"
+    submit: "Crear Ejercicio"
+    update: "Actualizar Ejercicio"
+    errors: "No se pudo actualizar el ejercicio debido a los siguientes errores:"
+    flash:
+      create:
+        success: "Ejercicio creado exitosamente."
+        error: "Hubo un error al crear el ejercicio."
+      update:
+        success: "Ejercicio actualizado exitosamente."
+        error: "Hubo un error al actualizar el ejercicio."
+  devise:
+    confirmations:
+      confirmed: "Tu dirección de correo electrónico ha sido confirmada exitosamente."
+      send_instructions: "Recibirás un correo con instrucciones sobre cómo confirmar tu dirección de correo en unos minutos."
+      send_paranoid_instructions: "Si tu dirección de correo existe en nuestra base de datos, recibirás un correo con instrucciones sobre cómo confirmar tu dirección de correo en unos minutos."
+    failure:
+      already_authenticated: "Ya has iniciado sesión."
+      inactive: "Tu cuenta aún no ha sido activada."
+      invalid: "Correo o contraseña inválida."
+      locked: "Tu cuenta está bloqueada."
+      last_attempt: "Tienes un intento más antes de que tu cuenta sea bloqueada."
+      not_found_in_database: "Correo o contraseña inválida."
+      timeout: "Tu sesión ha expirado. Por favor, inicia sesión de nuevo para continuar."
+      unauthenticated: "Necesitas iniciar sesión o registrarte para continuar."
+      unconfirmed: "Debes confirmar tu dirección de correo electrónico para continuar."
+    mailer:
+      confirmation_instructions:
+        subject: "Instrucciones de confirmación"
+      reset_password_instructions:
+        subject: "Instrucciones para restablecer la contraseña"
+      unlock_instructions:
+        subject: "Instrucciones para desbloquear"
+      email_changed:
+        subject: "Correo Electrónico Cambiado"
+      password_change:
+        subject: "Contraseña Cambiada"
+    omniauth_callbacks:
+      failure: "No se pudo autenticar desde %{kind} debido a \"%{reason}\"."
+      success: "Autenticado exitosamente desde la cuenta de %{kind}."
+    passwords:
+      no_token: "No puedes acceder a esta página sin venir desde un correo electrónico de restablecimiento de contraseña. Si vienes de un correo de restablecimiento de contraseña, asegúrate de haber usado la URL completa proporcionada."
+      send_instructions: "Recibirás un correo con instrucciones sobre cómo restablecer tu contraseña en unos minutos."
+      send_paranoid_instructions: "Si tu dirección de correo existe en nuestra base de datos, recibirás un enlace de recuperación de contraseña en tu correo en unos minutos."
+      updated: "Tu contraseña ha sido cambiada exitosamente. Ahora has iniciado sesión."
+      updated_not_active: "Tu contraseña ha sido cambiada exitosamente."
+    registrations:
+      destroyed: "¡Adiós! Tu cuenta ha sido cancelada exitosamente. Esperamos verte de nuevo pronto."
+      signed_up: "¡Bienvenido! Te has registrado exitosamente."
+      signed_up_but_inactive: "Te has registrado exitosamente. Sin embargo, no pudimos iniciar tu sesión porque tu cuenta aún no ha sido activada."
+      signed_up_but_locked: "Te has registrado exitosamente. Sin embargo, no pudimos iniciar tu sesión porque tu cuenta está bloqueada."
+      signed_up_but_unconfirmed: "Se ha enviado un mensaje con un enlace de confirmación a tu dirección de correo. Por favor, sigue el enlace para activar tu cuenta."
+      update_needs_confirmation: "Has actualizado tu cuenta exitosamente, pero necesitamos verificar tu nueva dirección de correo. Por favor, revisa tu correo y sigue el enlace de confirmación para confirmar tu nueva dirección de correo."
+      updated: "Tu cuenta ha sido actualizada exitosamente."
+      updated_but_not_signed_in: "Tu cuenta ha sido actualizada exitosamente, pero dado que tu contraseña fue cambiada, necesitas iniciar sesión de nuevo."
+    sessions:
+      signed_in: "Has iniciado sesión exitosamente."
+      signed_out: "Has cerrado sesión exitosamente."
+      already_signed_out: "Ya has cerrado sesión exitosamente."
+      new:
+        sign_in: "Iniciar sesión"
+        email: "Correo electrónico"
+        password: "Contraseña"
+        remember_me: "Recuérdame"
+        log_in: "Iniciar sesión"
+        description: "Inicia sesión para acceder a tu cuenta"
+        revise_face: "Revise Face"
+    unlocks:
+      send_instructions: "Recibirás un correo con instrucciones sobre cómo desbloquear tu cuenta en unos minutos."
+      send_paranoid_instructions: "Si tu cuenta existe, recibirás un correo con instrucciones sobre cómo desbloquearla en unos minutos."
+      unlocked: "Tu cuenta ha sido desbloqueada exitosamente. Por favor, inicia sesión para continuar."
+    registrations:
+      new:
+        sign_up: "Registrarse"
+        email: "Correo electrónico"
+        password: "Contraseña"
+        password_confirmation: "Confirmar contraseña"
+        characters_minimum: "caracteres mínimo"
+    shared:
+      links:
+        log_in: "Iniciar sesión"
+        sign_up: "Registrarse"
+        forgot_password: "¿Olvidaste tu contraseña?"
+        didnt_receive_confirmation_instructions: "¿No recibiste las instrucciones de confirmación?"
+        didnt_receive_unlock_instructions: "¿No recibiste las instrucciones para desbloquear?"
+  errors:
+    messages:
+      already_confirmed: "ya fue confirmado, por favor intenta iniciar sesión"
+      confirmation_period_expired: "necesita ser confirmado dentro de %{period}, por favor solicita uno nuevo"
+      expired: "ha expirado, por favor solicita uno nuevo"
+      not_found: "no encontrado"
+      not_locked: "no estaba bloqueado"
+      not_saved:
+        one: "1 error impidió que este %{resource} se guardara:"
+        other: "%{count} errores impidieron que este %{resource} se guardara:"
+  date:
+    abbr_month_names:
+    -
+    - Ene
+    - Feb
+    - Mar
+    - Abr
+    - May
+    - Jun
+    - Jul
+    - Ago
+    - Sep
+    - Oct
+    - Nov
+    - Dic
+    abbr_day_names:
+    - Dom
+    - Lun
+    - Mar
+    - Mié
+    - Jue
+    - Vie
+    - Sáb
+    formats:
+      short: "%-d/%b/%Y"

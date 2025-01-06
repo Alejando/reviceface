@@ -1,0 +1,13 @@
+<% if resource.errors.any? %>
+  <div class="bg-red-100 border border-error text-error px-4 py-3 rounded relative" role="alert">
+    <strong class="font-bold">¡Error!</strong>
+    <span class="block sm:inline">
+      <%= t("#{resource.class.to_s.downcase.pluralize}.errors") %>
+    </span>
+    <ul class="list-disc pl-5 mt-2">
+      <% resource.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

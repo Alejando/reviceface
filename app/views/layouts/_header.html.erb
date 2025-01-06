@@ -1,0 +1,22 @@
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-l-neutral-light px-5 py-2">
+  <div class="flex items-center gap-4 text-neutral-dark">
+    <%= image_tag "logo.svg", alt: "Logo", class: "h-8 w-8 rounded-full" %>
+    <h2 class="text-primary text-lg font-bold leading-tight">ReviseFaceApp</h2>
+  </div>
+  <div class="flex flex-1 justify-end gap-8">
+    <button id="userMenuButton" class="focus:outline-none bg-center flex justify-center  items-center aspect-square h-10 w-10 rounded-full  text-primary">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+        <path
+          d="M230.93,220a8,8,0,0,1-6.93,4H32a8,8,0,0,1-6.92-12c15.23-26.33,38.7-45.21,66.09-54.16a72,72,0,1,1,73.66,0c27.39,8.95,50.86,27.83,66.09,54.16A8,8,0,0,1,230.93,220Z"
+        ></path>
+      </svg>
+    </button>
+  <div id="userMenu" class="hidden absolute right-0 mt-8 py-2 w-48 bg-white rounded-xl shadow-xl z-50">
+    <ul>
+      <li><%= link_to t('navbar.profile'), edit_user_registration_path, class: "block px-4 py-2 text-gray-800 hover:bg-gray-100" %></li>
+      <li><%= link_to t('navbar.change_password'), edit_user_password_path, class: "block px-4 py-2 text-gray-800 hover:bg-gray-100" %></li>
+      <li><%= link_to t('navbar.sign_out'), destroy_user_session_path, data: { turbo_method: :delete }, class: "block px-4 py-2 text-gray-800 hover:bg-gray-100" %></li>
+    </ul>
+  </div>
+  </div>
+</header>

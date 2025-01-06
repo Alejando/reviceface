@@ -1,0 +1,44 @@
+
+<%= image_tag "logo.svg", alt: "Logo", class: "block mx-auto",width:"300", height:"300" %>
+
+<p class="text-neutral-dark text-2xl font-normal leading-normal text-center pb-3 pt-1"><%= t('devise.sessions.new.description') %></p>
+
+<%= form_for(resource, as: resource_name, url: session_path(resource_name), data: { turbo: false }) do |f| %>
+  <%= render "shared/flash" %>
+
+  <div class="flex max-w-full flex-wrap items-end gap-4 px-4 py-3">
+    <%= f.label :email, class: 'flex flex-col min-w-40 flex-1' do %>
+      <p class="text-neutral-dark text-base font-medium leading-normal pb-2">
+        <%= t('devise.sessions.new.email') %>
+      </p>
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-neutral-dark focus:outline-0 focus:ring-0 border border-primary bg-slate-50 focus:border-primary h-14 placeholder:text-neutral-dark p-4 text-base font-normal leading-normal' %>
+    <% end %>
+  </div>
+
+  <div class="flex max-w-full flex-wrap items-end gap-4 px-4 py-3">
+    <%= f.label :password, class: 'flex flex-col min-w-40 flex-1' do %>
+      <p class="text-neutral-dark text-base font-medium leading-normal pb-2">
+        <%= t('devise.sessions.new.password') %>
+      </p>
+      <%= f.password_field :password, autocomplete: "current-password", class: 'form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-neutral-dark focus:outline-0 focus:ring-0 border border-primary bg-slate-50 focus:border-primary h-14 placeholder:text-neutral-dark p-4 text-base font-normal leading-normal' %>
+    <% end %>
+  </div>
+
+  <% if devise_mapping.rememberable? %>
+    <div class="px-4">
+      <%= f.label :remember_me, class: 'flex gap-x-3 py-3 flex-row' do %>
+         <%= f.check_box :remember_me, class: 'h-5 w-5 rounded border-primary border-2 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-primary focus:outline-none' %>
+         <p class="text-neutral-dark text-base font-normal leading-normal">
+          <%= t('devise.sessions.new.remember_me') %>
+        </p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= render "devise/shared/links" %>
+
+  <div class="actions flex justify-end my-4">
+    <%= f.submit t('devise.sessions.new.log_in'), class:'flex cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-primary text-slate-50 text-base border border-primary font-bold leading-normal hover:text-primary hover:bg-slate-50' %>
+  </div>
+<% end %>
+

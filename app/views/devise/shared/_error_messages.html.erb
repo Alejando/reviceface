@@ -1,0 +1,11 @@
+<% if resource.errors.any? %>
+  <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+    <strong class="font-bold">¡Error!</strong>
+    <span class="block sm:inline"><%= pluralize(resource.errors.count, "error") %> impidieron que este formulario se guardara:</span>
+    <ul class="list-disc pl-5 mt-2">
+      <% resource.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

@@ -1,0 +1,17 @@
+<div class="flex justify-between items-center py-4">
+    <%= render "exercises/breadcrumbs" %>
+</div>
+
+<div class="w-6/12">
+  <%= form_with(model: @exercise, local: true, data: { turbo: false }) do |form| %>
+    <%= render 'shared/resource_errors', resource: @exercise %>
+
+    <div class="mb-8">
+      <%= render 'form', form: form %>
+    </div>
+
+    <div class="flex items-center justify-end ">
+      <%= form.submit t('exercises.update'), class: "bg-secondary text-white font-bold py-2 px-4 rounded-xl focus:outline-none focus:shadow-outline cursor-pointer border border-secondary hover:bg-background hover:text-secondary" %>
+    </div>
+  <% end %>
+</div>

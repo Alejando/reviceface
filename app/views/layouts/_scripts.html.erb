@@ -1,0 +1,17 @@
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const userMenuButton = document.getElementById('userMenuButton');
+    const userMenu = document.getElementById('userMenu');
+
+    userMenuButton.addEventListener('click', function() {
+      userMenu.classList.toggle('hidden');
+    });
+
+    // Opcional: Cerrar el menú si se hace clic fuera de él
+    document.addEventListener('click', function(event) {
+      if (!userMenu.contains(event.target) && !userMenuButton.contains(event.target)) {
+        userMenu.classList.add('hidden');
+      }
+    });
+  });
+</script>
