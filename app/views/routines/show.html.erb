@@ -1,0 +1,49 @@
+<div class="flex justify-between items-center py-4">
+    <%= render "routines/breadcrumbs" %>
+</div>
+
+<div class="bg-white shadow rounded-xl p-6 grid grid-cols-1">
+  <h2 class="text-2xl font-bold mb-3"><%= @routine.name %></h2>
+  <p class=" text-sm font-medium text-gray-600">
+    <i class="text-primary"><%= t('routines.description') %> </i>
+    : <%= @routine.description %>
+  </p>
+
+  <div class="grid grid-cols-3 mt-4">
+    <div>
+      <h3 class="font-semibold text-primary">
+        <%= t('routines.status') %>
+      </h3>
+      <p><%= t("routine.status.#{@routine.status}") %></p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-primary">
+        <%= t('routines.dates') %>
+      </h3>
+      <%= "#{date_to_human(@routine.start_at)} - #{date_to_human(@routine.end_at)}" %>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-primary">
+        <%= t('routines.accuracy_score') %>
+      </h3>
+      <p><%= @routine.accuracy_score %>%</p>
+    </div>
+  </div>
+  <div class=" mt-10">
+    <div>
+      <div id="add_exercise_form">
+      </div>
+      <div id="add_routine_buttons" class="flex justify-end" >
+        <%= render partial: "routine_exercises/add_routine_buttons", locals:{ routine: @routine } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-cols-3 gap-4 mt-4" id="routine_exercises">
+  <% @routine.routine_exercises.each do |routine_exercise| %>
+    <%= render partial: "routine_exercises/routine_exercise_card", locals:{ routine_exercise: routine_exercise } %>
+  <% end %>
+</div>

@@ -1,0 +1,14 @@
+<%= form_with(model: routine_exercise, url: routine_routine_exercise_path(routine_exercise.routine), method: :put) do |form| %>
+
+  <div id="resource_errors">
+    <%= render 'shared/resource_errors', resource: routine_exercise %>
+  </div>
+
+  <%= render 'form', form: form %>
+
+  <div class="flex items-center justify-end">
+    <%= link_to t('routines.cancel'), cancel_routine_routine_exercises_path(routine_exercise.routine), data: { turbo_stream: true }, class: "bg-gray-300 text-white font-bold py-2 px-4 rounded-xl focus:outline-none focus:shadow-outline cursor-pointer border border-gray-300 hover:bg-background hover:text-gray-100 mr-4" %>
+
+    <%= form.submit t('routines.update'), class: "bg-accent text-white font-bold py-2 px-4 rounded-xl focus:outline-none focus:shadow-outline cursor-pointer border border-accent hover:bg-background hover:text-accent" %>
+  </div>
+<% end %>

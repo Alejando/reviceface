@@ -49,10 +49,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_06_050604) do
     t.datetime "updated_at", null: false
     t.bigint "routine_id", null: false
     t.bigint "exercise_id", null: false
-    t.integer "repetitions"
-    t.integer "series"
-    t.integer "rest_time"
     t.integer "order", default: 0
+    t.integer "series"
+    t.integer "repetitions"
+    t.integer "accuracy_score"
+    t.string "difficulty"
+    t.integer "rest_time"
+    t.text "feedback"
+    t.text "notes"
+    t.datetime "started_at"
+    t.datetime "finished_at"
     t.index ["exercise_id"], name: "index_routine_exercises_on_exercise_id"
     t.index ["routine_id"], name: "index_routine_exercises_on_routine_id"
   end

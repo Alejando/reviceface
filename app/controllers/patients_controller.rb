@@ -2,11 +2,13 @@
 
 class PatientsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_patient, only: %i[edit update]
+  before_action :set_patient, only: %i[edit update show]
 
   def index
-    @pagy, @patients = pagy(current_clinic.patients)
+    @pagy, @patients = pagy(current_clinic.patients.order_by_user_status_and_name)
   end
+
+  def show; end
 
   def new
     @patient = current_clinic.patients.new

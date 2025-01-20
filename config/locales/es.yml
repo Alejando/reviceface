@@ -17,6 +17,11 @@ es:
         end_at: "Fecha Fin"
         patient: "Paciente"
         patient_id: "Paciente"
+      routine_exercise:
+        repetitions: "Repeticiones"
+        series: "Series"
+        rest_time: "Tiempo de descanso"
+        exercise: "Ejercicio"
     errors:
       models:
         user:
@@ -46,6 +51,17 @@ es:
               blank: "no puede estar en blanco"
             description:
               blank: "no puede estar en blanco"
+        routine_exercise:
+          attributes:
+            repetitions:
+              blank: "no puede estar en blanco"
+            series:
+              blank: "no puede estar en blanco"
+            rest_time:
+              blank: "no puede estar en blanco"
+            exercise:
+              blank: "no puede estar en blanco"
+              required: "es requerido"
   buttons:
     save: "Guardar"
     cancel: "Cancelar"
@@ -118,6 +134,23 @@ es:
     patient: "Paciente"
     pacient_id: "Paciente"
     select_patient: "Selecciona un paciente"
+    add_routine_exercise: "Nuevo Ejercicio"
+    rest_time: "Tiempo de descanso (segundos)"
+    repetitions: "Repeticiones"
+    series: "Series"
+    exercise: "Ejercicio"
+    delete_routine: "Eliminar Rutina"
+    repetitions_counter:
+      one: " 1 repetición"
+      other: "%{count} repeticiones"
+    series_counter:
+      one: " 1 serie"
+      other: "%{count} series"
+    rest_time_counter:
+      one: " 1 segundo"
+      other: "%{count} segundos"
+    delete_exercise_confirmation: '¿Estás seguro que deseas eliminar "%{exercise_name}"?'
+    delete_routine_confirmation: '¿Estás seguro que deseas eliminar la rutina "%{routine_name}"?'
     flash:
       create:
         success: "Rutina creada exitosamente."
@@ -125,6 +158,11 @@ es:
       update:
         success: "Rutina actualizada exitosamente."
         error: "Hubo un error al actualizar la rutina."
+      destroy:
+        success: "Rutina eliminada exitosamente."
+    errors:
+      destroy:
+        not_allowed: "No puedes eliminar una rutina que ya ha sido iniciada."
   exercises:
     new_exercise: "Nuevo Ejercicio"
     name: "Nombre"

@@ -2,8 +2,8 @@ class RoutineExercise < ApplicationRecord
   belongs_to :routine
   belongs_to :exercise
 
-  validates :routine, :exercise, :repetitions, :series, :rest_time, :order, presence: true
-  validates :routine, :exercise, uniqueness: { scope: :order }
+  validates :exercise, :repetitions, :series, :rest_time, :order, presence: true
+  validates :exercise, uniqueness: { scope: :routine_id }
 
   before_validation :set_default_order, on: :create
 

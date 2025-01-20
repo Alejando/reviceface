@@ -1,0 +1,34 @@
+<div class="max-w-sm overflow-hidden bg-white shadow-lg  rounded-xl relative" id="<%= dom_id(routine_exercise) %>">
+  <div class="px-6 py-4">
+    <div class="font-bold text-xl mb-2"><%= routine_exercise.exercise.name %></div>
+    <p class="text-gray-700 text-base truncate">
+      <%= routine_exercise.exercise.description %>
+    </p>
+    <p class="text-neutral-dark text-base mt-4">
+      <b class="text-primary">
+        <%=t('routines.series_counter', count: routine_exercise.series)%>
+      </b>
+      de
+      <b class="text-primary">
+        <%=t('routines.repetitions_counter', count: routine_exercise.repetitions)%>
+      </b>
+      con
+      <b class="text-primary">
+        <%=t('routines.rest_time_counter', count: routine_exercise.rest_time)%>
+      </b>
+      de descanso entre serie.
+    </p>
+  </div>
+  <div class="px-6 py-4 ">
+  </div>
+
+  <div class="p-4 flex justify-end">
+    <%= render "shared/edit_icon", path: edit_routine_routine_exercise_path(routine_exercise.routine, routine_exercise), turbo_stream: true %>
+  </div>
+
+  <%= button_to routine_routine_exercise_path(routine_exercise.routine, routine_exercise), method: :delete, data: { turbo_confirm: t('routines.delete_exercise_confirmation', exercise_name: routine_exercise.exercise.name) }, class: "absolute top-0 right-0 mt-2 mr-2 text-gray-300 hover:text-gray-800" do %>
+    <svg class="h-6 w-6 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+    </svg>
+  <% end %>
+</div>
