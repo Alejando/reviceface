@@ -19,4 +19,18 @@ module ApplicationHelper
     return '' unless value
     I18n.l(value.to_date, format: :short)
   end
+
+  def enum_to_human(record, enum_attr)
+    return '' unless record && enum_attr && record.send(enum_attr)
+
+    model_name = record.class.name.underscore
+    enum_value = record.send(enum_attr)
+
+    I18n.t("activerecord.attributes.#{model_name}.#{enum_attr.to_s.pluralize}.#{enum_value}",
+           default: [
+             :"enums.#{model_name}.#{enum_attr.to_s.pluralize}.#{enum_value}",
+             :"enums.#{enum_attr.to_s.pluralize}.#{enum_value}",
+             enum_value.to_s.humanize
+           ])
+  end
 end

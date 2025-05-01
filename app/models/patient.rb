@@ -17,4 +17,8 @@ class Patient < ApplicationRecord
   def accepted_terms_and_conditions?
     agree_terms_at && agree_privacy_at
   end
+
+  def upcoming_routines
+    routines.where('start_at >= ?', Date.current).order(:start_at)
+  end
 end

@@ -73,6 +73,22 @@ es:
     boolean:
       true: "Sí"
       false: "No"
+  enums:
+    user:
+      roles:
+        admin: "Administrador"
+        doctor: "Doctor"
+        patient: "Paciente"
+    routine:
+      statuses:
+        pending: "Pendiente"
+        in_progress: "En Progreso"
+        done: "Completada"
+    patient:
+      statuses:
+        active: "Activo"
+        inactive: "Inactivo"
+        on_hold: "En Espera"
   navbar:
     profile: "Perfil"
     change_password: "Cambiar Contraseña"

@@ -1,14 +1,17 @@
 class User < ApplicationRecord
+  has_one_attached :profile_photo
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :confirmable
   belongs_to :clinic, optional: true
   has_one :patient, dependent: :destroy
+  has_one_attached :profile_photo
 
   enum :role, %w[admin doctor patient].index_by(&:to_sym), prefix: true
 
   before_validation :set_defaults, on: :create
   validates :encrypted_password, presence: true, on: :update
+
 
   attr_accessor :skip_password_validation
 
@@ -24,6 +27,14 @@ class User < ApplicationRecord
 
   def full_name
     "#{first_name} #{last_name}"
+  end
+
+  def profile_photo_url
+    if profile_photo.attached?
+      profile_photo.url
+    else
+      ActionController::Base.helpers.asset_path('default-avatar.png')
+    end
   end
 
   private
