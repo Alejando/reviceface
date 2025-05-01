@@ -68,4 +68,4 @@ gem 'devise'
 gem 'pagy'
 gem 'pundit'
 gem 'haml'
-gem 'nokogiri'
+gem "rails_icons", "~> 1.3"
