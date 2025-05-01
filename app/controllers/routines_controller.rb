@@ -13,6 +13,7 @@ class RoutinesController < ApplicationController
 
   def new
     @routine = Routine.new
+    @routine.patient_id = params[:patient_id] if params[:patient_id].present?
     @routine.routine_exercises.build
   end
 

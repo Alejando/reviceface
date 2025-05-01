@@ -1,18 +1,28 @@
-<div class="flex justify-between items-center py-4">
-    <%= render "routines/breadcrumbs" %>
-</div>
-
-<div class="w-6/12">
-  <%= form_with(model: @routine, data: { turbo: false }) do |form| %>
-
-    <%= render 'shared/resource_errors', resource: @routine %>
-
-    <div class="mb-8">
-        <%= render 'form', form: form %>
+<div class="min-h-screen bg-background">
+  <!-- Header -->
+  <header class="bg-white shadow-md rounded-lg">
+    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center">
+        <h1 class="text-3xl font-bold text-primary">Nueva Rutina</h1>
+        <%= render "routines/breadcrumbs" %>
+      </div>
     </div>
+  </header>
 
-    <div class="flex items-center justify-end">
-      <%= form.submit t('routines.submit'), class: "bg-secondary text-white font-bold py-2 px-4 rounded-xl focus:outline-none focus:shadow-outline cursor-pointer border border-secondary hover:bg-background hover:text-secondary" %>
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <%= form_with(model: @routine, data: { turbo: false }) do |form| %>
+        <%= render 'shared/resource_errors', resource: @routine %>
+
+        <div class="mb-8">
+          <%= render 'form', form: form %>
+        </div>
+
+        <div class="flex items-center justify-end">
+          <%= form.submit t('routines.submit'), class: "bg-secondary text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline cursor-pointer border border-secondary hover:bg-background hover:text-secondary transition-colors duration-200" %>
+        </div>
+      <% end %>
     </div>
-  <% end %>
+  </main>
 </div>

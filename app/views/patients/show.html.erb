@@ -1,6 +1,6 @@
 <div class="min-h-screen bg-background">
   <!-- Header -->
-  <header class="bg-white shadow">
+  <header class="bg-white shadow-md rounded-lg">
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center">
         <h1 class="text-3xl font-bold text-primary">Dashboard del Paciente</h1>
@@ -12,7 +12,7 @@
   <!-- Main Content -->
   <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
     <!-- Ptient Information -->
-    <div class="bg-white shadow rounded-lg p-6 mb-8">
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <div class="flex items-center space-x-4">
         <div class="flex-shrink-0">
           <img class="h-20 w-20 rounded-full object-cover" src="<%= @patient.user.profile_photo_url %>" alt="<%= @patient.full_name %>" height="80" width="80">
@@ -53,12 +53,21 @@
     </div>
 
     <!-- Upcoming Routines -->
-    <div class="bg-white shadow rounded-lg p-6">
-      <h2 class="text-xl font-semibold text-primary mb-6">Próximas Rutinas</h2>
+    <div class="bg-white shadow-md rounded-lg p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-semibold text-primary">Próximas Rutinas</h2>
+        <%= link_to new_routine_path(patient_id: @patient.id), class: "group inline-flex items-center px-3 py-1.5 border border-primary text-xs font-medium rounded-lg text-primary bg-white hover:bg-primary hover:text-white transition-colors duration-200" do %>
+          <%= icon "plus", class: "mr-2 text-primary", data: { color: "#5B8DAE" } %>
+          Nueva Rutina
+        <% end %>
+      </div>
 
       <% if @patient.upcoming_routines.any? %>
         <div class="space-y-4">
-          <% @patient.upcoming_routines.each do |routine| %>
+          <% @patient.upcoming_routines.each_with_index do |routine, index| %>
+            <% if index > 0 %>
+              <div class="border-t border-gray-200 my-4"></div>
+            <% end %>
             <div class="bg-neutral-light p-4 rounded-lg border-l-4 border-secondary">
               <div class="flex justify-between items-center">
                 <div>
