@@ -16,9 +16,9 @@ class PatientsController < ApplicationController
       format.turbo_stream do
         @pagy, @patients = pagy(@q.result)
         render turbo_stream: turbo_stream.replace(
-          "patients_table",
-          partial: "patients/patients_table",
-          locals: { patients: @patients, pagy: @pagy }
+          "table_with_pagination",
+          partial: "patients/table_with_pagination",
+          locals: { patients: @patients, pagy: @pagy, q: @q }
         )
       end
     end

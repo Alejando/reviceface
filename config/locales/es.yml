@@ -116,7 +116,7 @@ es:
     terms_and_conditions: "Términos y condiciones"
     routines: "Rutinas"
     actions: "Acciones"
-    title: "Nuevo Paciente"
+    title: "Pacientes"
     first_name: "Nombre"
     last_name: "Apellidos"
     birthdate: "Fecha de Nacimiento"
