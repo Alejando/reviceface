@@ -29,6 +29,14 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
+  def self.ransackable_attributes(auth_object = nil)
+    %w[id first_name last_name email birthdate]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    %w[patient]
+  end
+
   def profile_photo_url
     if profile_photo.attached?
       profile_photo.url

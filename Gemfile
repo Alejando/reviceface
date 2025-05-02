@@ -69,3 +69,4 @@ gem 'pagy'
 gem 'pundit'
 gem 'haml'
 gem "rails_icons", "~> 1.3"
+gem 'ransack'

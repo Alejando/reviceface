@@ -10,9 +10,16 @@ class Patient < ApplicationRecord
 
   scope :confirmed, -> { where.not(agree_terms_at: nil, agree_privacy_at: nil) }
   scope :active, -> { joins(:user).confirmed.where(users: { inactivated_at: nil }) }
-  scope :order_by_user_status_and_name, -> (order = :asc) {
-    joins(:user).order(Arel.sql("COALESCE(users.inactivated_at, '9999-12-31') ASC, users.first_name #{order}, users.last_name #{order}"))
-  }
+
+  ransack_alias :search_patient, :user_first_name_or_user_last_name
+
+  def self.ransackable_attributes(auth_object = nil)
+    %w[id user_id search_patient]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    %w[user]
+  end
 
   def accepted_terms_and_conditions?
     agree_terms_at && agree_privacy_at

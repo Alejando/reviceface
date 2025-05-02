@@ -5,7 +5,23 @@ class PatientsController < ApplicationController
   before_action :set_patient, only: %i[edit update show]
 
   def index
-    @pagy, @patients = pagy(current_clinic.patients.order_by_user_status_and_name)
+    @q = current_clinic.patients.ransack(params[:q])
+    @q.sorts = "user_first_name asc" if @q.sorts.blank?
+
+    respond_to do |format|
+      format.html do
+        @pagy, @patients = pagy(@q.result)
+      end
+
+      format.turbo_stream do
+        @pagy, @patients = pagy(@q.result)
+        render turbo_stream: turbo_stream.replace(
+          "patients_table",
+          partial: "patients/patients_table",
+          locals: { patients: @patients, pagy: @pagy }
+        )
+      end
+    end
   end
 
   def show; end
