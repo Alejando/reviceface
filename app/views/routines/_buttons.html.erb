@@ -1,3 +1,6 @@
-<div class="py-5">
-  <%= link_to t('routines.new_routine'), new_routine_path, class: "bg-secondary  text-white font-bold py-2 px-4 rounded-xl border border-secondary hover:bg-background hover:text-secondary" %>
+<div>
+  <%= link_to new_routine_path, class: "group inline-flex items-center px-4 py-2 border border-primary text-sm font-medium rounded-lg text-white bg-primary hover:bg-background hover:text-primary transition-colors duration-200 h-10" do %>
+    <%= icon "plus", class: "mr-2 text-primary group-hover:text-white transition-colors duration-200", data: { color: "#5B8DAE" } %>
+    <%= t('routines.new_routine') %>
+  <% end %>
 </div>

@@ -1,0 +1,229 @@
+<div class="container mx-auto py-8">
+  <h1 class="text-3xl font-bold mb-8">Componente de Notificaciones</h1>
+  
+  <div class="mb-8">
+    <p class="text-lg mb-4">
+      Este es un ejemplo de implementación del componente de notificaciones para ReviceFace. 
+      El componente utiliza Tailwind CSS para los estilos, Hotwire/Stimulus para la interactividad, 
+      y los iconos de Boxicons a través de la gema rails_icons.
+    </p>
+    
+    <p class="mb-4">
+      Las notificaciones pueden ser mostradas de varias formas:
+    </p>
+    
+    <ul class="list-disc pl-8 mb-6">
+      <li>Automáticamente desde el controlador usando flash messages</li>
+      <li>Renderizando el componente directamente en una vista</li>
+      <li>Dinámicamente desde JavaScript</li>
+    </ul>
+  </div>
+  
+  <%= render "examples/notification_examples" %>
+  
+  <div class="mt-12 p-6 bg-white rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold mb-6">Documentación del Componente</h2>
+    
+    <div class="space-y-6">
+      <div>
+        <h3 class="text-xl font-semibold mb-2">Parámetros</h3>
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Parámetro</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Valor por defecto</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">type</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Symbol</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
+              <td class="px-6 py-4 text-sm text-gray-500">Tipo de notificación: :success, :warning, :danger, :confirm</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">message</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">String</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
+              <td class="px-6 py-4 text-sm text-gray-500">Mensaje a mostrar en la notificación</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">dismissible</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Boolean</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">true</td>
+              <td class="px-6 py-4 text-sm text-gray-500">Si la notificación puede ser cerrada por el usuario</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">timeout</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Integer</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">5000</td>
+              <td class="px-6 py-4 text-sm text-gray-500">Tiempo en milisegundos antes de que la notificación desaparezca automáticamente. 0 para no desaparecer.</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">title</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">String</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">nil</td>
+              <td class="px-6 py-4 text-sm text-gray-500">Título personalizado para la notificación. Si no se especifica, se usa un título predeterminado según el tipo.</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">position</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">String</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">"top-right"</td>
+              <td class="px-6 py-4 text-sm text-gray-500">Posición de la notificación: "top-right", "top-left", "bottom-right", "bottom-left", "top-center", "bottom-center"</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">custom_class</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">String</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">nil</td>
+              <td class="px-6 py-4 text-sm text-gray-500">Clases CSS personalizadas para aplicar al contenedor de la notificación</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div>
+        <h3 class="text-xl font-semibold mb-2">Uso en controladores</h3>
+        <pre class="bg-gray-100 p-4 rounded-md overflow-x-auto">
+# En un controlador
+def create
+  @patient = Patient.new(patient_params)
+  
+  if @patient.save
+    flash[:success] = "Paciente creado correctamente"
+    redirect_to patients_path
+  else
+    flash.now[:error] = "Error al crear el paciente"
+    render :new, status: :unprocessable_entity
+  end
+end
+        </pre>
+      </div>
+      
+      <div>
+        <h3 class="text-xl font-semibold mb-2">Uso directo en vistas</h3>
+        <pre class="bg-gray-100 p-4 rounded-md overflow-x-auto">
+<%%= render(NotificationComponent.new(
+  type: :success,
+  message: "Operación completada con éxito",
+  dismissible: true,
+  timeout: 5000,
+  title: "Título personalizado",
+  position: "top-right",
+  custom_class: "my-custom-class"
+)) %>
+        </pre>
+      </div>
+      
+      <div>
+        <h3 class="text-xl font-semibold mb-2">Uso con variables locales</h3>
+        <pre class="bg-gray-100 p-4 rounded-md overflow-x-auto">
+<%%= render "shared/notifications", notifications: [
+  { type: :success, message: "Primera notificación" },
+  { type: :warning, message: "Segunda notificación", dismissible: false },
+  { type: :danger, message: "Tercera notificación", timeout: 10000 }
+] %>
+        </pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# Agregar JavaScript para inicializar los botones de ejemplo %>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const showNotification = (type, message, options = {}) => {
+    const notificationsContainer = document.getElementById('notifications');
+    
+    // Crear el elemento de notificación
+    const notification = document.createElement('div');
+    
+    // Determinar las clases según el tipo
+    let typeClass = '';
+    let iconClass = '';
+    let iconColor = '';
+    let title = '';
+    
+    switch(type) {
+      case 'success':
+        typeClass = 'bg-green-50 border-green-500 text-green-700';
+        iconClass = 'check-circle';
+        iconColor = 'text-green-600';
+        title = options.title || 'Éxito';
+        break;
+      case 'warning':
+        typeClass = 'bg-yellow-50 border-yellow-500 text-yellow-700';
+        iconClass = 'error-circle';
+        iconColor = 'text-yellow-600';
+        title = options.title || 'Advertencia';
+        break;
+      case 'danger':
+        typeClass = 'bg-red-50 border-red-500 text-red-700';
+        iconClass = 'x-circle';
+        iconColor = 'text-red-600';
+        title = options.title || 'Error';
+        break;
+      case 'confirm':
+        typeClass = 'bg-blue-50 border-blue-500 text-blue-700';
+        iconClass = 'info-circle';
+        iconColor = 'text-blue-600';
+        title = options.title || 'Información';
+        break;
+      default:
+        typeClass = 'bg-gray-50 border-gray-500 text-gray-700';
+        iconClass = 'info-circle';
+        iconColor = 'text-gray-600';
+        title = options.title || 'Notificación';
+    }
+    
+    // Construir el HTML de la notificación
+    notification.innerHTML = `
+      <div class="p-4 rounded-md border-l-4 shadow-sm w-full ${typeClass} ${options.customClass || ''}"
+           data-controller="notification"
+           data-notification-timeout-value="${options.timeout || 5000}"
+           data-notification-position-value="${options.position || 'top-right'}"
+           role="alert">
+        <div class="flex items-start justify-between">
+          <div class="flex">
+            <div class="flex-shrink-0 mr-3">
+              <span class="icon ${iconClass} w-5 h-5 ${iconColor}"></span>
+            </div>
+            <div>
+              <p class="font-bold">${title}</p>
+              <p class="text-sm">${message}</p>
+            </div>
+          </div>
+          ${options.dismissible !== false ? `
+            <button type="button"
+                    class="-mx-1.5 -my-1.5 ml-auto flex items-center justify-center p-1.5 rounded-lg hover:bg-gray-100 focus:ring-2 focus:ring-gray-300"
+                    data-action="notification#dismiss"
+                    aria-label="Close">
+              <span class="icon x w-4 h-4"></span>
+            </button>
+          ` : ''}
+        </div>
+      </div>
+    `;
+    
+    // Agregar la notificación al contenedor
+    notificationsContainer.appendChild(notification.firstElementChild);
+  };
+  
+  // Ejemplo: Mostrar notificación al hacer clic en un botón
+  document.querySelectorAll('.show-notification-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const type = button.dataset.type || 'success';
+      const message = button.dataset.message || 'Notificación de ejemplo';
+      
+      showNotification(type, message, {
+        title: button.dataset.title,
+        dismissible: button.dataset.dismissible !== 'false',
+        timeout: parseInt(button.dataset.timeout || 5000),
+        position: button.dataset.position || 'top-right',
+        customClass: button.dataset.customClass
+      });
+    });
+  });
+});
+</script>

@@ -1,49 +1,121 @@
-<div class="flex justify-between items-center py-4">
-    <%= render "routines/breadcrumbs" %>
-</div>
-
-<div class="bg-white shadow rounded-xl p-6 grid grid-cols-1">
-  <h2 class="text-2xl font-bold mb-3"><%= @routine.name %></h2>
-  <p class=" text-sm font-medium text-gray-600">
-    <i class="text-primary"><%= t('routines.description') %> </i>
-    : <%= @routine.description %>
-  </p>
-
-  <div class="grid grid-cols-3 mt-4">
-    <div>
-      <h3 class="font-semibold text-primary">
-        <%= t('routines.status') %>
-      </h3>
-      <p><%= t("routine.status.#{@routine.status}") %></p>
-    </div>
-
-    <div>
-      <h3 class="font-semibold text-primary">
-        <%= t('routines.dates') %>
-      </h3>
-      <%= "#{date_to_human(@routine.start_at)} - #{date_to_human(@routine.end_at)}" %>
-    </div>
-
-    <div>
-      <h3 class="font-semibold text-primary">
-        <%= t('routines.accuracy_score') %>
-      </h3>
-      <p><%= @routine.accuracy_score %>%</p>
-    </div>
-  </div>
-  <div class=" mt-10">
-    <div>
-      <div id="add_exercise_form">
-      </div>
-      <div id="add_routine_buttons" class="flex justify-end" >
-        <%= render partial: "routine_exercises/add_routine_buttons", locals:{ routine: @routine } %>
+<div class="min-h-screen bg-background">
+  <!-- Header -->
+  <header class="bg-white shadow-md rounded-lg">
+    <div class=" mx-auto py-5 px-4">
+      <div class="items-center">
+        <%= render "routines/breadcrumbs" %>
       </div>
     </div>
-  </div>
-</div>
+  </header>
+  <!-- Main Content -->
+  <main class=" mx-auto py-5">
+    <!-- Routine Information -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">  
+      <div class="flex items-center space-x-4">
+        <div class="flex-shrink-0">
+          <%= icon "spreadsheet", class: "h-16 w-16 text-primary", data: { color: "#5B8DAE" } %>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-primary"><%= @routine.name %></h2>
+          <p class="text-sm text-neutral-dark"><%= t('routines.patient') %>: <%= link_to @routine.patient.full_name, @routine.patient, class: "text-primary hover:text-secondary transition-colors duration-200" %></p>
+        </div>
+      </div>
 
-<div class="grid grid-cols-3 gap-4 mt-4" id="routine_exercises">
-  <% @routine.routine_exercises.each do |routine_exercise| %>
-    <%= render partial: "routine_exercises/routine_exercise_card", locals:{ routine_exercise: routine_exercise } %>
-  <% end %>
+      <div class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="bg-neutral-light p-4 rounded-lg border-l-4 border-primary">
+          <h3 class="text-sm font-medium text-primary"><%= t('routines.status') %></h3>
+          <div class="mt-2 space-y-2">
+            <p class="text-sm text-neutral-dark"><%= t("routine.status.#{@routine.status}") %></p>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= @routine.status == 'pending' ? 'bg-warning/20 text-warning' : (@routine.status == 'done' ? 'bg-success/20 text-success' : 'bg-info/20 text-info') %>">
+              <%= enum_to_human(@routine, :status) %>
+            </span>
+          </div>
+        </div>
+
+        <div class="bg-neutral-light p-4 rounded-lg border-l-4 border-secondary">
+          <h3 class="text-sm font-medium text-secondary"><%= t('routines.dates') %></h3>
+          <div class="mt-2 space-y-2">
+            <p class="text-sm text-neutral-dark"><%= t('routines.start_date') %>: <%= date_to_human(@routine.start_at) %></p>
+            <p class="text-sm text-neutral-dark"><%= t('routines.end_date') %>: <%= date_to_human(@routine.end_at) %></p>
+          </div>
+        </div>
+
+        <div class="bg-neutral-light p-4 rounded-lg border-l-4 border-accent">
+          <h3 class="text-sm font-medium text-accent"><%= t('routines.accuracy_score') %></h3>
+          <div class="mt-2 space-y-2">
+            <p class="text-sm text-neutral-dark"><%= @routine.accuracy_score %>%</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="mt-6 bg-neutral-light p-4 rounded-lg border-l-4 border-primary">
+        <h3 class="text-sm font-medium text-primary"><%= t('routines.description') %></h3>
+        <div class="mt-2">
+          <p class="text-sm text-neutral-dark"><%= @routine.description %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exercises Section -->
+    <div class="bg-white shadow-md rounded-lg p-5">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-semibold text-primary"><%= t('routines.exercises') %></h2>
+        <div id="add_routine_buttons">
+          <%= link_to new_routine_routine_exercise_path(@routine),
+              data: { turbo_stream: true }, 
+              class: "group inline-flex items-center px-4 py-2 border border-primary text-sm font-medium rounded-lg text-primary bg-white hover:bg-primary hover:text-white transition-colors duration-200" do %>
+            <%= icon "plus", class: "mr-2 text-primary group-hover:text-white transition-colors duration-200", data: { color: "#5B8DAE" } %>
+            <%= t('routines.add_routine_exercise') %>
+          <% end %>
+        </div>
+      </div>
+
+      <div id="add_exercise_form"></div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4" id="routine_exercises">
+        <% @routine.routine_exercises.each do |routine_exercise| %>
+          <div class="bg-white shadow-sm rounded-lg overflow-hidden relative border border-gray-200 hover:shadow-md transition-shadow duration-200 mx-auto w-full hover:border-primary" id="<%= dom_id(routine_exercise) %>">
+            <div class="px-3 py-2 border-b border-gray-100 flex justify-between items-center bg-neutral-light">
+              <div class="font-medium text-base text-primary truncate pr-2 flex-grow"><%= routine_exercise.exercise.name %></div>
+              <div class="flex items-center space-x-1">
+                <%= render "shared/edit_icon", path: edit_routine_routine_exercise_path(routine_exercise.routine, routine_exercise), turbo_stream: true %>
+                <% if @routine.pending? %>
+                  <%= render "shared/trash_icon",
+                      path: routine_routine_exercise_path(routine_exercise.routine, routine_exercise),
+                      turbo_stream: true,
+                      confirm_message: t('routines.delete_exercise_confirmation', exercise_name: routine_exercise.exercise.name) %>
+                <% end %>
+              </div>
+            </div>
+
+            <div class="px-3 py-2">
+              <p class="text-neutral-dark text-xs mb-2 line-clamp-2 h-8">
+                <%= routine_exercise.exercise.description %>
+              </p>
+
+              <div class="grid grid-cols-3 gap-1 text-xs mt-2 bg-neutral-light/50 p-2 rounded-lg border border-gray-100">
+                <div class="flex flex-col items-center justify-center">
+                  <%= icon "dumbbell", class: "text-primary mb-1", size: 14 %>
+                  <span class="text-primary font-medium text-xs"><%= t('routines.series') %></span>
+                  <span class="text-neutral-dark text-xs"><%= routine_exercise.series %></span>
+                </div>
+
+                <div class="flex flex-col items-center justify-center">
+                  <%= icon "repeat", class: "text-primary mb-1", size: 14 %>
+                  <span class="text-primary font-medium text-xs"><%= t('routines.repetitions') %></span>
+                  <span class="text-neutral-dark text-xs"><%= routine_exercise.repetitions %></span>
+                </div>
+
+                <div class="flex flex-col items-center justify-center">
+                  <%= icon "time", class: "text-primary mb-1", size: 14 %>
+                  <span class="text-primary font-medium text-xs"><%= t('routines.rest') %></span>
+                  <span class="text-neutral-dark text-xs"><%= routine_exercise.rest_time %>s</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </main>
 </div>

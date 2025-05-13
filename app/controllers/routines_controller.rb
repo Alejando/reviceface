@@ -6,7 +6,23 @@ class RoutinesController < ApplicationController
   before_action :current_clinic
 
   def index
-    @pagy, @routines = pagy(current_clinic.routines)
+    @q = current_clinic.routines.ransack(params[:q])
+    @q.sorts = "name asc" if @q.sorts.blank?
+
+    respond_to do |format|
+      format.html do
+        @pagy, @routines = pagy(@q.result)
+      end
+
+      format.turbo_stream do
+        @pagy, @routines = pagy(@q.result)
+        render turbo_stream: turbo_stream.replace(
+          "table_with_pagination",
+          partial: "routines/table_with_pagination",
+          locals: { routines: @routines, pagy: @pagy, q: @q }
+        )
+      end
+    end
   end
 
   def show; end
@@ -40,7 +56,7 @@ class RoutinesController < ApplicationController
     if @routine.destroy
       redirect_to routines_path, notice: t('routines.flash.destroy.success')
     else
-      redirect_to @routine, alert: @routine.errors.full_messages.join(', ')
+      redirect_to @routine, alert: t('routines.errors.destroy.not_allowed')
     end
   end
 

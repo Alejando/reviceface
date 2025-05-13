@@ -1,0 +1,216 @@
+<%# Ejemplos de notificaciones %>
+<div class="p-6 bg-white rounded-lg shadow-md">
+  <h2 class="text-2xl font-bold mb-6">Ejemplos de Notificaciones</h2>
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="space-y-4">
+      <h3 class="text-lg font-semibold">Tipos de notificaciones</h3>
+      
+      <%# Notificación de éxito %>
+      <%= render(NotificationComponent.new(
+        type: :success,
+        message: "La operación se ha completado con éxito.",
+        dismissible: true,
+        timeout: 0
+      )) %>
+      
+      <%# Notificación de advertencia %>
+      <%= render(NotificationComponent.new(
+        type: :warning,
+        message: "Hay campos incompletos en el formulario.",
+        dismissible: true,
+        timeout: 0
+      )) %>
+      
+      <%# Notificación de error %>
+      <%= render(NotificationComponent.new(
+        type: :danger,
+        message: "No se pudo completar la operación debido a un error.",
+        dismissible: true,
+        timeout: 0
+      )) %>
+      
+      <%# Notificación de información %>
+      <%= render(NotificationComponent.new(
+        type: :confirm,
+        message: "Recuerde completar su perfil para acceder a todas las funcionalidades.",
+        dismissible: true,
+        timeout: 0
+      )) %>
+    </div>
+    
+    <div class="space-y-4">
+      <h3 class="text-lg font-semibold">Opciones personalizadas</h3>
+      
+      <%# Notificación con título personalizado %>
+      <%= render(NotificationComponent.new(
+        type: :success,
+        title: "Perfil actualizado",
+        message: "Los cambios en su perfil han sido guardados correctamente.",
+        dismissible: true,
+        timeout: 0
+      )) %>
+      
+      <%# Notificación no descartable %>
+      <%= render(NotificationComponent.new(
+        type: :warning,
+        title: "Aviso importante",
+        message: "Esta notificación no se puede cerrar y requiere su atención.",
+        dismissible: false,
+        timeout: 0
+      )) %>
+      
+      <%# Notificación con clase personalizada %>
+      <%= render(NotificationComponent.new(
+        type: :confirm,
+        title: "Estilo personalizado",
+        message: "Esta notificación tiene un estilo personalizado con bordes redondeados adicionales.",
+        dismissible: true,
+        timeout: 0,
+        custom_class: "rounded-xl"
+      )) %>
+    </div>
+  </div>
+  
+  <div class="mt-8">
+    <h3 class="text-lg font-semibold mb-4">Código JavaScript para mostrar notificaciones dinámicamente</h3>
+    <pre class="bg-gray-100 p-4 rounded-md overflow-x-auto">
+// Mostrar una notificación desde JavaScript
+document.addEventListener('DOMContentLoaded', () => {
+  const showNotification = (type, message, options = {}) => {
+    const notificationsContainer = document.getElementById('notifications');
+    
+    // Crear el elemento de notificación
+    const notification = document.createElement('div');
+    
+    // Determinar las clases según el tipo
+    let typeClass = '';
+    let iconClass = '';
+    let iconColor = '';
+    let title = '';
+    
+    switch(type) {
+      case 'success':
+        typeClass = 'bg-green-50 border-green-500 text-green-700';
+        iconClass = 'check-circle';
+        iconColor = 'text-green-600';
+        title = options.title || 'Éxito';
+        break;
+      case 'warning':
+        typeClass = 'bg-yellow-50 border-yellow-500 text-yellow-700';
+        iconClass = 'error-circle';
+        iconColor = 'text-yellow-600';
+        title = options.title || 'Advertencia';
+        break;
+      case 'danger':
+        typeClass = 'bg-red-50 border-red-500 text-red-700';
+        iconClass = 'x-circle';
+        iconColor = 'text-red-600';
+        title = options.title || 'Error';
+        break;
+      case 'confirm':
+        typeClass = 'bg-blue-50 border-blue-500 text-blue-700';
+        iconClass = 'info-circle';
+        iconColor = 'text-blue-600';
+        title = options.title || 'Información';
+        break;
+      default:
+        typeClass = 'bg-gray-50 border-gray-500 text-gray-700';
+        iconClass = 'info-circle';
+        iconColor = 'text-gray-600';
+        title = options.title || 'Notificación';
+    }
+    
+    // Construir el HTML de la notificación usando el helper de iconos de rails_icons
+    notification.innerHTML = `
+      <div class="p-4 rounded-md border-l-4 shadow-sm w-full ${typeClass} ${options.customClass || ''}"
+           data-controller="notification"
+           data-notification-timeout-value="${options.timeout || 5000}"
+           data-notification-position-value="${options.position || 'top-right'}"
+           role="alert">
+        <div class="flex items-start justify-between">
+          <div class="flex">
+            <div class="flex-shrink-0 mr-3">
+              <span class="icon ${iconClass} w-5 h-5 ${iconColor}"></span>
+            </div>
+            <div>
+              <p class="font-bold">${title}</p>
+              <p class="text-sm">${message}</p>
+            </div>
+          </div>
+          ${options.dismissible !== false ? `
+            <button type="button"
+                    class="-mx-1.5 -my-1.5 ml-auto flex items-center justify-center p-1.5 rounded-lg hover:bg-gray-100 focus:ring-2 focus:ring-gray-300"
+                    data-action="notification#dismiss"
+                    aria-label="Close">
+              <span class="icon x w-4 h-4"></span>
+            </button>
+          ` : ''}
+        </div>
+      </div>
+    `;
+    
+    // Agregar la notificación al contenedor
+    notificationsContainer.appendChild(notification.firstElementChild);
+    
+    // Inicializar el controlador Stimulus
+    const application = window.Stimulus.application;
+    application.controllers.forEach(controller => {
+      if (controller.element === notification.firstElementChild) {
+        controller.connect();
+      }
+    });
+  };
+  
+  // Ejemplo: Mostrar notificación al hacer clic en un botón
+  document.querySelectorAll('.show-notification-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const type = button.dataset.type || 'success';
+      const message = button.dataset.message || 'Notificación de ejemplo';
+      
+      showNotification(type, message, {
+        title: button.dataset.title,
+        dismissible: button.dataset.dismissible !== 'false',
+        timeout: parseInt(button.dataset.timeout || 5000),
+        position: button.dataset.position || 'top-right',
+        customClass: button.dataset.customClass
+      });
+    });
+  });
+});
+    </pre>
+  </div>
+  
+  <div class="mt-8">
+    <h3 class="text-lg font-semibold mb-4">Botones de ejemplo</h3>
+    <div class="flex flex-wrap gap-3">
+      <button class="show-notification-btn px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+              data-type="success"
+              data-message="Esta es una notificación de éxito creada dinámicamente."
+              data-title="Operación exitosa">
+        Mostrar éxito
+      </button>
+      
+      <button class="show-notification-btn px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+              data-type="warning"
+              data-message="Esta es una notificación de advertencia creada dinámicamente."
+              data-title="Advertencia">
+        Mostrar advertencia
+      </button>
+      
+      <button class="show-notification-btn px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+              data-type="danger"
+              data-message="Esta es una notificación de error creada dinámicamente."
+              data-title="Error">
+        Mostrar error
+      </button>
+      
+      <button class="show-notification-btn px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              data-type="confirm"
+              data-message="Esta es una notificación de información creada dinámicamente."
+              data-title="Información">
+        Mostrar información
+      </button>
+    </div>
+  </div>
+</div>

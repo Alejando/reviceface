@@ -1,4 +1,4 @@
-<% if routine.status_pending? %>
+<% if routine.pending? %>
   <%= link_to t('routines.delete_routine'), routine, data: { turbo_method: :delete, turbo_confirm: t('routines.delete_routine_confirmation', routine_name: routine.name) }, class: "bg-danger text-white font-bold py-2 px-4 rounded-xl focus:outline-none focus:shadow-outline cursor-pointer border border-danger hover:bg-background hover:text-danger mr-4" %>
 <% end %>
 

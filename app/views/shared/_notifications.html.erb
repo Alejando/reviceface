@@ -1,0 +1,37 @@
+<div id="notifications" class="fixed top-4 right-4 z-50 flex flex-col gap-3 max-w-md">
+  <% flash.each do |type, message| %>
+    <% flash_type = case type.to_sym
+                    when :notice, :info then :confirm
+                    when :success then :success
+                    when :error then :danger
+                    when :alert then :warning
+                    else :confirm
+                    end %>
+    <%= render(NotificationComponent.new(
+      type: flash_type,
+      message: message,
+      dismissible: true,
+      timeout: 5000
+    )) %>
+  <% end %>
+</div>
+
+<% if defined?(local_assigns[:notifications]) && local_assigns[:notifications].present? %>
+  <div class="flex flex-col gap-3">
+    <% local_assigns[:notifications].each do |notification| %>
+      <% notification_type = case notification[:type].to_sym
+                             when :notice, :info then :confirm
+                             when :success then :success
+                             when :error then :danger
+                             when :alert then :warning
+                             else :confirm
+                             end %>
+      <%= render(NotificationComponent.new(
+        type: notification_type,
+        message: notification[:message],
+        dismissible: notification[:dismissible].nil? ? true : notification[:dismissible],
+        timeout: notification[:timeout] || 5000
+      )) %>
+    <% end %>
+  </div>
+<% end %>

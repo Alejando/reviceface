@@ -1,0 +1,8 @@
+- Take in account the tailwind configuration
+- hotwire approach
+- view components approach
+- divide code in partials
+- rails version 8
+- tailwind version 3.4
+- Use HyperUI Tailwind CSS components
+- use boxicons icons from rails-icons gem

@@ -11,6 +11,16 @@ module ApplicationHelper
     end
   end
 
+  # New helper method to render notifications using our component
+  def render_notification(type, message, dismissible: true, timeout: nil)
+    render(NotificationComponent.new(
+      type: type,
+      message: message,
+      dismissible: dismissible,
+      timeout: timeout
+    ))
+  end
+
   def boolean_to_human(value)
     value ? t("values.boolean.true") : t("values.boolean.false")
   end

@@ -1,17 +1,40 @@
-<div class="flex justify-between items-center py-4">
-    <%= render "routines/breadcrumbs" %>
-</div>
-
-<div class="w-6/12">
-  <%= form_with(model: @routine, local: true, data: { turbo: false }) do |form| %>
-    <%= render 'shared/resource_errors', resource: @routine %>
-
-    <div class="mb-8">
-      <%= render 'form', form: form %>
+<div class="min-h-screen bg-background">
+  <!-- Header -->
+  <header class="bg-white shadow-md rounded-lg">
+    <div class=" mx-auto py-5 px-4">
+      <div class="items-center">
+        <%= render "routines/breadcrumbs" %>
+      </div>
     </div>
+  </header>
 
-    <div class="flex items-center justify-end ">
-      <%= form.submit t('routines.update'), class: "bg-secondary text-white font-bold py-2 px-4 rounded-xl focus:outline-none focus:shadow-outline cursor-pointer border border-secondary hover:bg-background hover:text-secondary" %>
+  <!-- Main Content -->
+  <main class=" mx-auto py-5">
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <%= form_with(model: @routine, local: true, data: { turbo: false }) do |form| %>
+        <%= render 'shared/resource_errors', resource: @routine %>
+
+        <div class="mb-8">
+          <%= render 'form', form: form %>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <div>
+            <% if @routine.pending? %>
+              <%= button_to routine_path(@routine), 
+                  method: :delete, 
+                  data: { confirm: t('routines.delete_routine_confirmation', routine_name: @routine.name) },
+                  class: "inline-flex items-center px-4 py-2 border border-danger text-sm font-medium rounded-lg text-white bg-danger hover:bg-background hover:text-danger" do %>
+                <%= icon "trash", class: "mr-2" %>
+                <%= t('routines.delete_routine') %>
+              <% end %>
+            <% end %>
+          </div>
+          <div>
+            <%= form.submit t('routines.update'), class: "inline-flex items-center px-4 py-2 border border-primary text-sm font-medium rounded-lg text-white bg-primary hover:bg-background hover:text-primary transition-colors duration-200 cursor-pointer" %>
+          </div>
+        </div>
+      <% end %>
     </div>
-  <% end %>
+  </main>
 </div>

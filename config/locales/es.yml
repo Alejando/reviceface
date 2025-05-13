@@ -160,7 +160,7 @@ es:
     accuracy_score: "Precisión"
     exercises: "Ejercicios"
     actions: "Acciones"
-    title: "Nueva Rutina"
+    title: "Rutinas"
     submit: "Crear Rutina"
     update: "Actualizar Rutina"
     errors: "No se pudo actualizar la rutina debido a los siguientes errores:"
@@ -168,11 +168,16 @@ es:
     pacient_id: "Paciente"
     select_patient: "Selecciona un paciente"
     add_routine_exercise: "Nuevo Ejercicio"
-    rest_time: "Tiempo de descanso (segundos)"
+    edit_exercise: "Editar Ejercicio"
+    rest_time: "Tiempo de descanso"
+    rest: "Descanso"
     repetitions: "Repeticiones"
     series: "Series"
     exercise: "Ejercicio"
     delete_routine: "Eliminar Rutina"
+    search: "Buscar rutina o paciente..."
+    clear_search: "Limpiar búsqueda"
+    no_results: "No se encontraron rutinas con los criterios de búsqueda"
     repetitions_counter:
       one: " 1 repetición"
       other: "%{count} repeticiones"
@@ -182,6 +187,7 @@ es:
     rest_time_counter:
       one: " 1 segundo"
       other: "%{count} segundos"
+    seconds: "segundos"
     delete_exercise_confirmation: '¿Estás seguro que deseas eliminar "%{exercise_name}"?'
     delete_routine_confirmation: '¿Estás seguro que deseas eliminar la rutina "%{routine_name}"?'
     flash:

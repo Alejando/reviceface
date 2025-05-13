@@ -1,0 +1,29 @@
+<div
+  class="<%= container_class %>"
+  data-controller="notification"
+  <%= stimulus_attributes.html_safe %>
+  role="alert"
+>
+  <div class="flex items-start justify-between">
+    <div class="flex">
+      <div class="flex-shrink-0 mr-3">
+        <%= icon icon_class, class: "w-5 h-5 #{icon_color_class}" %>
+      </div>
+      <div>
+        <p class="font-bold"><%= title %></p>
+        <p class="text-sm"><%= message %></p>
+      </div>
+    </div>
+
+    <% if dismissible %>
+      <button
+        type="button"
+        class="-mx-1.5 -my-1.5 ml-auto flex items-center justify-center p-1.5 rounded-lg hover:bg-gray-100 focus:ring-2 focus:ring-gray-300"
+        data-action="notification#dismiss"
+        aria-label="Close"
+      >
+        <%= icon "x", class: "w-4 h-4" %>
+      </button>
+    <% end %>
+  </div>
+</div>

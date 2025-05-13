@@ -1,40 +1,49 @@
-<div class="flex justify-between items-center py-4">
-    <%= render "routines/breadcrumbs" %>
-    <%= render "routines/buttons" %>
-</div>
+<div class="min-h-screen bg-background">
+  <!-- Header -->
+  <header class="bg-white shadow-md rounded-lg">
+    <div class=" mx-auto py-5 px-4">
+      <div class="items-center">
+        <%= render "routines/breadcrumbs" %>
+      </div>
+    </div>
+  </header>
 
-<table class="min-w-full leading-normal mb-5">
-  <thead>
-    <tr class="bg-primary">
-      <th class="px-5 py-3 border-b-2 border-gray-20 text-left text-xs font-semibold text-neutral-light uppercase tracking-wider rounded-tl-xl">
-        <%= t('routines.name') %>
-      </th>
-      <th class="px-5 py-3 border-b-2 border-gray-20 text-left text-xs font-semibold text-neutral-light uppercase tracking-wider">
-        <%= t('routines.patient') %>
-      </th>
-      <th class="px-5 py-3 border-b-2 border-gray-20 text-left text-xs font-semibold text-neutral-light uppercase tracking-wider">
-        <%= t('routines.dates') %>
-      </th>
-      <th class="px-5 py-3 border-b-2 border-gray-20 text-left text-xs font-semibold text-neutral-light uppercase tracking-wider">
-        <%= t('routines.status') %>
-      </th>
-      <th class="px-5 py-3 border-b-2 border-gray-20 text-left text-xs font-semibold text-neutral-light uppercase tracking-wider">
-        <%= t('routines.accuracy_score') %>
-      </th>
-      <th class="px-5 py-3 border-b-2 border-gray-20 text-left text-xs font-semibold text-neutral-light uppercase tracking-wider">
-        <%= t('routines.exercises') %>
-      </th>
-      <th class="px-5 py-3 border-b-2 border-gray-20 text-left text-xs font-semibold text-neutral-light uppercase tracking-wider rounded-tr-xl">
-        <%= t('routines.actions') %>
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-     <%= render partial: 'routine', collection: @routines %>
-  </tbody>
-</table>
+  <!-- Main Content -->
+  <main class=" mx-auto py-5">
+    <!-- Unified Card -->
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+      <!-- Actions Bar -->
+      <div class="p-4 border-b border-gray-200">
+        <div class="flex justify-between items-center">
+          <!-- Search Bar -->
+          <div class="w-1/3">
+            <%= search_form_for @q, url: routines_path, html: { class: "flex", data: { turbo_frame: "_top", controller: "search", turbo_stream: true } } do |f| %>
+              <div class="relative flex-grow">
+                <%= f.search_field :search_routine_cont_any,
+                    placeholder: t('routines.search'),
+                    class: "w-full h-10 px-4 py-2 border border-primary rounded-lg text-neutral-dark focus:outline-none focus:ring-1 focus:ring-primary",
+                    data: {
+                      action: "input->search#submit",
+                      search_target: "input"
+                    }
+                %>
+                <% if @q.search_routine_cont_any.present? %>
+                  <%= link_to routines_path, class: "absolute inset-y-0 right-0 flex items-center pr-3 text-neutral-dark hover:text-primary", title: t('routines.clear_search') do %>
+                    <%= icon "x-circle", class: "w-5 h-5" %>
+                  <% end %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+          <!-- New Routine Button -->
+          <div>
+            <%= render "routines/buttons" %>
+          </div>
+        </div>
+      </div>
 
-<div class="flex justify-between items-center">
-  <%== pagy_nav(@pagy)  if @pagy.pages > 1 %>
-  <%== pagy_info(@pagy) %>
+      <!-- Table with Pagination -->
+      <%= render "routines/table_with_pagination", routines: @routines, pagy: @pagy, q: @q %>
+    </div>
+  </main>
 </div>
