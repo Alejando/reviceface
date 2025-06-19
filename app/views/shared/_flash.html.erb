@@ -1,12 +1,15 @@
-<div class="mx-5 mt-5">
-  <% flash.each do |type, message| %>
-    <% flash_type = case type.to_sym
-                    when :notice, :info then :confirm
-                    when :success then :success
-                    when :error then :danger
-                    when :alert then :warning
-                    else :confirm
-                    end %>
-    <%= render_notification(flash_type, message, dismissible: true, timeout: 5000) %>
-  <% end %>
-</div>
+<% flash.each do |type, message| %>
+  <% flash_type = case type.to_sym
+                  when :notice, :info then :confirm
+                  when :success then :success
+                  when :error then :danger
+                  when :alert then :warning
+                  else :confirm
+                  end %>
+  <%= render(NotificationComponent.new(
+    type: flash_type,
+    message: message,
+    dismissible: true,
+    timeout: 5000
+  )) %>
+<% end %>

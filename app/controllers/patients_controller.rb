@@ -8,18 +8,21 @@ class PatientsController < ApplicationController
     @q = current_clinic.patients.ransack(params[:q])
     @q.sorts = "user_first_name asc" if @q.sorts.blank?
 
-    respond_to do |format|
-      format.html do
-        @pagy, @patients = pagy(@q.result)
-      end
+    # Ensure columns used for sorting are in the SELECT list when using DISTINCT
+    patients_relation = @q.result(distinct: true)
+                          .includes(user: { profile_photo_attachment: :blob })
+                          .select("patients.*, users.first_name, users.last_name")
 
+    @pagy, @patients = pagy(patients_relation, items: 10)
+    @new_patient = current_clinic.patients.new
+    @new_patient.build_user
+
+    respond_to do |format|
+      format.html
       format.turbo_stream do
-        @pagy, @patients = pagy(@q.result)
-        render turbo_stream: turbo_stream.replace(
-          "table_with_pagination",
-          partial: "patients/table_with_pagination",
-          locals: { patients: @patients, pagy: @pagy, q: @q }
-        )
+        render turbo_stream: turbo_stream.replace("table_with_pagination",
+                                                  partial: "patients/table_with_pagination",
+                                                  locals: { patients: @patients, pagy: @pagy, q: @q })
       end
     end
   end
@@ -35,9 +38,29 @@ class PatientsController < ApplicationController
     @patient = current_clinic.patients.new(patient_params)
     assign_default_patient_attributes
     if @patient.save
-      redirect_to patients_path, notice: t('patients.flash.create.success')
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.append("patients_list_body", partial: "patients/patient", locals: { patient: @patient }),
+            turbo_stream.replace("notifications", 
+                               render_to_string(NotificationComponent.new(
+                                 type: :success, 
+                                 message: t('patients.flash.create.success')
+                               )))
+            # Consider adding a stream to reset the form in the modal if needed, or rely on form_submit_controller to close it.
+          ]
+        end
+        format.html { redirect_to patients_path, notice: t('patients.flash.create.success') }
+      end
     else
-      render :new
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace("new_patient_form_container",
+                                                    partial: "patients/modal_form",
+                                                    locals: { new_patient: @patient }), status: :unprocessable_entity
+        end
+        format.html { render :new, status: :unprocessable_entity }
+      end
     end
   end
 

@@ -20,7 +20,7 @@
         </th>
       </tr>
     </thead>
-    <tbody class="divide-y divide-gray-200">
+    <tbody id="patients_list_body" class="divide-y divide-gray-200">
       <% if patients.any? %>
         <%= render partial: 'patient', collection: patients %>
       <% else %>

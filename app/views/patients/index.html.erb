@@ -46,4 +46,13 @@
       <%= render "patients/table_with_pagination", patients: @patients, pagy: @pagy, q: @q %>
     </div>
   </main>
+
+  <% content_for :modals do %>
+    <%= render ModalComponent.new(id: "new_patient_modal", title_text: t('patients.new_patient')) do %>
+      <div id="new_patient_form_container">
+        <%= render "patients/modal_form", new_patient: @new_patient %>
+      </div>
+    <% end %>
+  <% end %>
+
 </div>

@@ -1,0 +1,23 @@
+<% if resource.errors.any? %>
+  <div class="bg-danger/10 border-l-4 border-danger rounded-md p-4 mb-4">
+    <div class="flex items-start">
+      <div class="flex-shrink-0">
+        <%= icon "error-circle", class: "h-5 w-5 text-danger" %>
+      </div>
+      <div class="ml-3">
+        <h3 class="text-sm font-medium text-danger">
+          <%= t('errors.messages.not_saved', 
+                count: resource.errors.count, 
+                resource: resource.class.model_name.human.downcase) %>
+        </h3>
+        <div class="mt-2 text-sm text-danger">
+          <ul class="list-disc pl-5 space-y-1">
+            <% resource.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

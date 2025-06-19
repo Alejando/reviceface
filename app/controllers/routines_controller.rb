@@ -54,9 +54,29 @@ class RoutinesController < ApplicationController
 
   def destroy
     if @routine.destroy
-      redirect_to routines_path, notice: t('routines.flash.destroy.success')
+      respond_to do |format|
+        format.html { redirect_to routines_path, notice: t('routines.flash.destroy.success') }
+        format.turbo_stream do
+          flash.now[:notice] = t('routines.flash.destroy.success')
+          @q = current_clinic.routines.ransack(params[:q])
+          @q.sorts = "name asc" if @q.sorts.blank?
+          @pagy, @routines = pagy(@q.result)
+          render turbo_stream: [
+            turbo_stream.update('table_with_pagination', 
+                              partial: 'routines/table_with_pagination',
+                              locals: { routines: @routines, pagy: @pagy, q: @q }),
+            turbo_stream.update('notifications', partial: 'shared/notifications')
+          ]
+        end
+      end
     else
-      redirect_to @routine, alert: t('routines.errors.destroy.not_allowed')
+      respond_to do |format|
+        format.html { redirect_to @routine, alert: t('routines.errors.destroy.not_allowed') }
+        format.turbo_stream do
+          flash.now[:alert] = t('routines.errors.destroy.not_allowed')
+          render turbo_stream: turbo_stream.update('notifications', partial: 'shared/notifications')
+        end
+      end
     end
   end
 

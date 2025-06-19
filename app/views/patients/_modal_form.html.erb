@@ -1,0 +1,29 @@
+<%# Locals: new_patient %>
+
+<%= form_with(model: new_patient, url: patients_path, html: { 
+  data: { 
+    controller: "form-submit", 
+    form_submit_modal_id_value: "new_patient_modal",
+    turbo_frame: "_top" # Ensures responses target the whole page, not a specific frame if one was targeted before
+  },
+  class: "flex flex-col h-full" # Changed to flex column to allow footer to stick to bottom
+}) do |form| %>
+
+  <div class="flex-grow px-6 py-4">
+    <%# Display validation errors if any %>
+    <%= render 'shared/form_errors', resource: new_patient %>
+    <%= form.fields_for :user, new_patient.user do |user_fields| %>
+      <%= render 'patients/form', form: form, user_fields: user_fields %>
+    <% end %>
+  </div>
+
+  <%# Footer styled to match modal header %>
+  <div class="px-6 py-3 bg-background border-t border-gray-200 flex justify-end gap-3">
+    <button type="button" 
+            data-action="click->modal#close" 
+            class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+      <%= t('general.cancel') %>
+    </button>
+    <%= form.submit t('patients.submit'), class: "inline-flex items-center justify-center rounded-lg border border-transparent bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 cursor-pointer" %>
+  </div>
+<% end %>

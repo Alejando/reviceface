@@ -1,4 +1,4 @@
-<tr class="border-t border-">
+<tr id="<%= dom_id(routine) %>" class="border-t border-">
   <td class="p-5 bg-white rounded-bl-xl">
     <%= link_to routine.name, routine, class: "text-primary hover:text-secondary transition-colors duration-200" %>
   </td>
@@ -21,7 +21,7 @@
     <div class="flex items-center justify-start">
       <%= render "shared/edit_icon", path: edit_routine_path(routine), turbo_stream: false %>
       <% if routine.pending? %>
-        <%= render "shared/trash_icon", path: routine, turbo_stream: false, confirm_message: t('routines.delete_routine_confirmation', routine_name: routine.name) %>
+        <%= render "shared/trash_icon", path: routine, turbo_stream: true, confirm_message: t('routines.delete_routine_confirmation', routine_name: routine.name) %>
       <% end %>
     </div>
   </td>
