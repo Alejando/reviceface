@@ -36,7 +36,63 @@
   <!-- Pagination -->
   <div class="p-4 border-t border-gray-200">
     <div class="flex justify-between items-center">
-      <%== pagy_nav(pagy) if pagy.pages > 1 %>
+      <%# Construimos un hash con los parámetros de búsqueda activos %>
+      <% q_params = {} %>
+      <% if params[:q].present? %>
+        <% q_params = { q: params[:q].to_unsafe_h } %>
+      <% elsif defined?(search_params) && search_params.present? %>
+        <% q_params = { q: search_params.respond_to?(:to_unsafe_h) ? search_params.to_unsafe_h : search_params } %>
+      <% end %>
+      <% if pagy.pages > 1 %>
+        <nav class="flex items-center gap-1" aria-label="Paginación">
+          <% # Botón anterior %>
+          <% if pagy.prev %>
+            <%= link_to patients_path(page: pagy.prev, **q_params),
+                        class: "flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 hover:bg-gray-100", 
+                        aria: { label: "Página anterior" },
+                        data: { turbo_action: "replace", turbo_frame: "_top" } do %>
+              <%= icon("chevron-left", class: "w-4 h-4") %>
+            <% end %>
+          <% else %>
+            <span class="flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 bg-gray-50">
+              <%= icon("chevron-left", class: "w-4 h-4 text-gray-300") %>
+            </span>
+          <% end %>
+
+          <% # Números de páginas %>
+          <% pagy.series.each do |item| %>
+            <% if item.is_a?(Integer) %>
+              <% if item == pagy.page %>
+                <span class="flex h-8 w-8 items-center justify-center rounded-md border border-primary bg-primary text-white font-medium">
+                  <%= item %>
+                </span>
+              <% else %>
+                <%= link_to item, patients_path(page: item, **q_params),
+                          class: "flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 hover:bg-gray-50 hover:border-primary text-neutral-dark",
+                          data: { turbo_action: "replace", turbo_frame: "_top" } %>
+              <% end %>
+            <% elsif item.is_a?(String) %>
+              <span class="flex h-8 w-8 items-center justify-center text-neutral-dark">
+                <%= item %>
+              </span>
+            <% end %>
+          <% end %>
+
+          <% # Botón siguiente %>
+          <% if pagy.next %>
+            <%= link_to patients_path(page: pagy.next,  **q_params), 
+                        class: "flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 hover:bg-gray-100", 
+                        aria: { label: "Página siguiente" },
+                        data: { turbo_action: "replace", turbo_frame: "_top" } do %>
+              <%= icon("chevron-right", class: "w-4 h-4") %>
+            <% end %>
+          <% else %>
+            <span class="flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 bg-gray-50">
+              <%= icon("chevron-right", class: "w-4 h-4 text-gray-300") %>
+            </span>
+          <% end %>
+        </nav>
+      <% end %>
       <div class="text-sm text-neutral-dark">
         <%== pagy_info(pagy) %>
       </div>

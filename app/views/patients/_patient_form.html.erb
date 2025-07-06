@@ -1,0 +1,48 @@
+<%# Locals: patient, action (new o edit) %>
+
+<%= form_with(model: patient,
+              data: { turbo_frame: "_top" },
+              html: { 
+                data: { 
+                  controller: "form-submit", 
+                  form_submit_modal_id_value: "patient_modal"
+                },
+                class: "flex flex-col h-full" # Changed to flex column to allow footer to stick to bottom
+              }) do |form| %>
+
+  <%# Parámetros de paginación y búsqueda %>
+  <% page_to_use = defined?(page_param) ? page_param : params[:page] %>
+  <% search_to_use = defined?(search_params) ? search_params : params[:q] %>
+  
+  <%# Incluimos siempre la página actual como campo oculto %>
+  <%= hidden_field_tag :page, page_to_use if page_to_use.present? %>  
+  
+  <%# Incluimos todos los parámetros de búsqueda como campos ocultos %>
+  <% if search_to_use.present? %>
+    <% if search_to_use.is_a?(ActionController::Parameters) || search_to_use.is_a?(Hash) %>
+      <% search_to_use.each do |key, value| %>
+        <% if value.present? %>
+          <%= hidden_field_tag "q[#{key}]", value %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <div class="flex-grow px-6 py-4">
+    <%# Display validation errors if any %>
+    <%= render 'shared/form_errors', resource: patient %>
+    <%= form.fields_for :user, patient.user do |user_fields| %>
+      <%= render 'patients/form', form: form, user_fields: user_fields %>
+    <% end %>
+  </div>
+
+  <div class="px-6 py-3 bg-background border-t border-gray-200 flex justify-end gap-3">
+    <button type="button" 
+            data-action="click->modal#close" 
+            class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+      <%= t('general.cancel') %>
+    </button>
+    <%= form.submit patient.new_record? ? t('patients.submit') : t('patients.update'), 
+                   class: "inline-flex items-center justify-center rounded-lg border border-transparent bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 cursor-pointer" %>
+  </div>
+<% end %>

@@ -1,10 +1,13 @@
 <div>
   <button type="button" 
           class="group inline-flex items-center px-4 py-2 border border-primary text-sm font-medium rounded-lg text-white bg-primary hover:bg-background hover:text-primary transition-colors duration-200 h-10"
-          data-controller="modal-opener"
-          data-action="click->modal-opener#open"
-          data-modal-opener-target-value="new_patient_modal">
-    <%= icon "plus", class: "mr-2 text-primary group-hover:text-white transition-colors duration-200" %> <%# Removed data: { color: "#5B8DAE" } as it might conflict or be unnecessary with Tailwind group hover %>
+          data-controller="modal-opener patient-modal"
+          data-action="click->modal-opener#open click->patient-modal#openNewModal"
+          data-modal-opener-target-value="patient_modal"
+          data-patient-modal-new-url-value="<%= new_patient_path %>"
+          data-patient-modal-target="newButton"
+          data-turbo-frame="patient_form_container">
+    <%= icon "plus", class: "mr-2 text-primary group-hover:text-white transition-colors duration-200" %>
     <%= t('patients.new_patient') %>
   </button>
 </div>

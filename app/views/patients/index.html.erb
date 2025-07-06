@@ -48,9 +48,14 @@
   </main>
 
   <% content_for :modals do %>
-    <%= render ModalComponent.new(id: "new_patient_modal", title_text: t('patients.new_patient')) do %>
-      <div id="new_patient_form_container">
-        <%= render "patients/modal_form", new_patient: @new_patient %>
+    <%= render ModalComponent.new(id: "patient_modal", title_text: "") do |modal| %>
+      <% modal.with_title do %>
+        <h3 id="patient_modal_title" data-patient-modal-target="title" class="text-lg font-medium leading-6 text-gray-900">
+          <!-- El título se actualizará dinámicamente -->
+        </h3>
+      <% end %>
+      <div id="patient_form_container">
+        <%= render "patients/patient_form", patient: @new_patient, title: t('patients.new_patient') %>
       </div>
     <% end %>
   <% end %>

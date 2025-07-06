@@ -15,7 +15,13 @@
   </td>
   <td class="px-5 py-4">
     <div class="flex items-center space-x-2">
-      <%= link_to edit_patient_path(patient), class: "inline-flex items-center p-1.5 text-primary hover:bg-primary/10 rounded-lg transition-colors duration-150" do %>
+      <%= link_to "#",
+          class: "inline-flex items-center p-1.5 text-primary hover:bg-primary/10 rounded-lg transition-colors duration-150",
+          data: {
+            controller: "patient-modal",
+            action: "click->patient-modal#openEditModal",
+            patient_modal_patient_id_value: patient.id
+          } do %>
         <%= icon "edit", class: "w-4 h-4" %>
       <% end %>
     </div>

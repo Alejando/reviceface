@@ -5,16 +5,20 @@ class PatientsController < ApplicationController
   before_action :set_patient, only: %i[edit update show]
 
   def index
-    set_patients_with_pagination
     @new_patient = current_clinic.patients.new
     @new_patient.build_user
-
+    set_patients_with_pagination
     respond_to do |format|
       format.html
       format.turbo_stream do
         render turbo_stream: turbo_stream.replace("table_with_pagination",
                                                   partial: "patients/table_with_pagination",
-                                                  locals: { patients: @patients, pagy: @pagy, q: @q })
+                                                  locals: { 
+                                                    patients: @patients, 
+                                                    pagy: @pagy, 
+                                                    q: @q,
+                                                    **pagination_and_search_params
+                                                  })
       end
     end
   end
@@ -24,56 +28,98 @@ class PatientsController < ApplicationController
   def new
     @patient = current_clinic.patients.new
     @patient.build_user
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream do
+        modal_title = t('patients.new_patient')
+
+        render turbo_stream: [
+          turbo_stream.update(
+            "patient_form_container",
+            partial: "patients/patient_form",
+            locals: {
+              patient: @patient,
+              title: modal_title,
+              **pagination_and_search_params
+            }
+          ),
+          turbo_stream.update("patient_modal_title", modal_title)
+        ]
+      end
+    end
   end
 
   def create
     @patient = current_clinic.patients.new(patient_params)
     assign_default_patient_attributes
+
     if @patient.save
       @new_patient = current_clinic.patients.new
       @new_patient.build_user
 
       respond_to do |format|
         format.turbo_stream do
-          set_patients_with_pagination
+          set_patients_with_pagination(@patient)
 
           render turbo_stream: [
             turbo_stream.replace("table_with_pagination",
                                 partial: "patients/table_with_pagination",
-                                locals: { patients: @patients, pagy: @pagy, q: @q }),
+                                locals: { 
+                                  patients: @patients, 
+                                  pagy: @pagy, 
+                                  q: @q,
+                                  **pagination_and_search_params 
+                                }),
             turbo_stream.replace("notifications",
                                render_to_string(NotificationComponent.new(
                                  type: :success,
                                  message: t('patients.flash.create.success')
                                ))),
-            turbo_stream.replace("new_patient_form_container",
-                               partial: "patients/modal_form",
-                               locals: { new_patient: @new_patient })
+            turbo_stream.replace("patient_form_container",
+                               partial: "patients/patient_form",
+                               locals: {
+                                  patient: @new_patient,
+                                  title: t('patients.new_patient'),
+                                  **pagination_and_search_params
+                               })
           ]
         end
-        format.html { redirect_to patients_path, notice: t('patients.flash.create.success') }
       end
     else
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: turbo_stream.replace("new_patient_form_container",
-                                                    partial: "patients/modal_form",
-                                                    locals: { new_patient: @patient }), status: :unprocessable_entity
+          render turbo_stream: turbo_stream.replace("patient_form_container",
+                                                  partial: "patients/patient_form",
+                                                  locals: {
+                                                     patient: @patient,
+                                                     title: t('patients.new_patient'),
+                                                     **pagination_and_search_params
+                                                   }), status: :unprocessable_entity
         end
-        format.html { render :new, status: :unprocessable_entity }
       end
     end
   end
 
   def edit
     respond_to do |format|
-      format.html
       format.turbo_stream do
-        render turbo_stream: turbo_stream.replace(
-          "edit_patient_form_container",
-          partial: "patients/edit_modal_form",
-          locals: { patient: @patient }
-        )
+        # Preparar título con nombre del paciente
+        patient_name = @patient.user&.full_name || @patient.id.to_s
+        modal_title = t('patients.edit_patient_with_name', name: patient_name)
+        
+        render turbo_stream: [
+          turbo_stream.update(
+            "patient_form_container",
+            partial: "patients/patient_form",
+            locals: {
+              patient: @patient,
+              title: modal_title,
+              **pagination_and_search_params
+            }
+          ),
+          turbo_stream.update("patient_modal_title", modal_title)
+        ]
       end
     end
   end
@@ -82,12 +128,23 @@ class PatientsController < ApplicationController
     if @patient.update(patient_params)
       respond_to do |format|
         format.turbo_stream do
+          params[:page] = params[:page].presence || 1
           set_patients_with_pagination
+          search_locals = {}
+          if params[:q].present?
+            search_locals[:search_params] = params[:q]
+          end
 
           render turbo_stream: [
             turbo_stream.replace("table_with_pagination",
                                 partial: "patients/table_with_pagination",
-                                locals: { patients: @patients, pagy: @pagy, q: @q }),
+                                locals: { 
+                                  patients: @patients, 
+                                  pagy: @pagy, 
+                                  q: @q,
+                                  page_param: params[:page],
+                                  **search_locals
+                                }),
             turbo_stream.replace("notifications",
                                render_to_string(NotificationComponent.new(
                                  type: :success,
@@ -95,18 +152,19 @@ class PatientsController < ApplicationController
                                )))
           ]
         end
-        format.html { redirect_to patients_path, notice: t('patients.flash.update.success') }
       end
     else
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace(
-            "edit_patient_form_container",
-            partial: "patients/edit_modal_form",
-            locals: { patient: @patient }
+            "patient_form_container",
+            partial: "patients/patient_form",
+            locals: {
+              patient: @patient,
+              title: t('patients.edit_patient')
+            }
           ), status: :unprocessable_entity
         end
-        format.html { render :edit, status: :unprocessable_entity }
       end
     end
   end
@@ -129,15 +187,38 @@ class PatientsController < ApplicationController
     @patient.user.skip_password_validation = true
   end
 
-  def set_patients_with_pagination
+  def set_patients_with_pagination(record = nil)
     @q = current_clinic.patients.ransack(params[:q])
     @q.sorts = "user_first_name asc" if @q.sorts.blank?
 
-    # Ensure columns used for sorting are in the SELECT list when using DISTINCT
     patients_relation = @q.result(distinct: true)
                           .includes(user: { profile_photo_attachment: :blob })
                           .select("patients.*, users.first_name, users.last_name")
 
-    @pagy, @patients = pagy(patients_relation, items: 10)
+    if record
+      position = patients_relation.index(record)
+      page = (position / 10).ceil + 1
+      params[:page] = page
+    end
+
+    total_count = patients_relation.size
+    per_page = 10
+    total_pages = (total_count.to_f / per_page).ceil
+
+    requested_page = params[:page].to_i
+    requested_page = 1 if requested_page <= 0
+
+    if total_pages > 0 && requested_page > total_pages
+      requested_page = 1
+    end
+
+    @pagy, @patients = pagy(patients_relation, items: per_page, page: requested_page)
+  end
+
+  def pagination_and_search_params
+    {
+      page_param: params[:page],
+      search_params: params[:q]
+    }
   end
 end

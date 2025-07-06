@@ -1,0 +1,235 @@
+import { Controller } from "@hotwired/stimulus"
+
+// Connects to data-controller="patient-modal"
+export default class extends Controller {
+  static values = {
+    patientId: Number,
+    newUrl: String
+  }
+
+  static targets = ["title", "newButton"]
+
+  connect() {
+    // Si este controlador se usa en el enlace de edición, necesitamos configurar un evento click
+    if (this.hasPatientIdValue) {
+      this.element.addEventListener("click", this.openEditModal.bind(this));
+    }
+    
+    // Si tenemos un botón "Nuevo paciente", configuramos su evento click
+    if (this.hasNewButtonTarget) {
+      this.newButtonTarget.addEventListener("click", this.openNewModal.bind(this));
+    }
+
+    // Escuchar eventos turbo:before-stream-render para actualizar el título
+    document.addEventListener("turbo:before-stream-render", this.handleStreamRender.bind(this))
+  }
+
+  disconnect() {
+    if (this.hasPatientIdValue) {
+      this.element.removeEventListener("click", this.openEditModal.bind(this));
+    }
+    
+    if (this.hasNewButtonTarget) {
+      this.newButtonTarget.removeEventListener("click", this.openNewModal.bind(this));
+    }
+
+    document.removeEventListener("turbo:before-stream-render", this.handleStreamRender.bind(this))
+  }
+
+  openEditModal(event) {
+    event.preventDefault();
+    
+    // Abrimos el modal usando el API modal de Stimulus
+    const modalElement = document.getElementById("patient_modal");
+    if (!modalElement) return;
+    
+    const modalController = this.application.getControllerForElementAndIdentifier(modalElement, "modal");
+    if (modalController) {
+      modalController.openValue = true;
+      
+      // Mostrar loader mientras se carga el paciente
+      const formContainer = document.getElementById("patient_form_container");
+      if (formContainer) {
+        // Guardamos el contenido original para restaurarlo en caso de error
+        this._originalFormContent = formContainer.innerHTML;
+        formContainer.innerHTML = this._getLoaderHTML();
+      }
+    }
+    
+    // Creamos un objeto para almacenar los parámetros
+    let queryParams = new URLSearchParams();
+    
+    // Obtenemos los parámetros actuales de la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // 1. Obtenemos la página actual de la URL o de la paginación activa
+    let currentPage = urlParams.get('page');
+    
+    if (!currentPage) {
+      // Intentamos obtener la página de la paginación activa
+      const activePageLink = document.querySelector('.pagination .active a');
+      if (activePageLink) {
+        const url = new URL(activePageLink.href, window.location.origin);
+        currentPage = url.searchParams.get('page');
+      }
+    }
+    
+    // Agregamos la página actual si existe
+    if (currentPage) {
+      queryParams.append('page', currentPage);
+    }
+    
+    // 2. Agregamos todos los parámetros de búsqueda (q[*])
+    urlParams.forEach((value, key) => {
+      if (key.startsWith('q[')) {
+        queryParams.append(key, value);
+      }
+    });
+    
+    // 3. Capturamos cualquier búsqueda activa en el campo de búsqueda
+    const searchField = document.querySelector('input[name="q[search_patient_cont_any]"]');
+    if (searchField && searchField.value && !queryParams.has('q[search_patient_cont_any]')) {
+      queryParams.append('q[search_patient_cont_any]', searchField.value);
+    }
+    
+    // Creamos la URL final con todos los parámetros
+    const queryString = queryParams.toString();
+    const url = `/patients/${this.patientIdValue}/edit${queryString ? '?' + queryString : ''}`;
+    
+    // Log para depuración
+    console.log('URL para modal de edición:', url);
+    
+    // Luego cargamos el formulario de edición con los parámetros
+    fetch(url, {
+      headers: {
+        "Accept": "text/vnd.turbo-stream.html"
+      }
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.text();
+      }
+      throw new Error('Network response was not ok');
+    })
+    .then(html => {
+      // Procesar la respuesta Turbo Stream manualmente
+      const template = document.createElement('template');
+      template.innerHTML = html;
+      
+      // Buscar y aplicar todos los turbo-stream en la respuesta
+      const turboStreams = template.content.querySelectorAll('turbo-stream');
+      turboStreams.forEach(stream => {
+        document.body.appendChild(stream);
+      });
+    })
+    .catch(error => console.error('Error cargando el formulario de edición:', error));
+  }
+
+  handleStreamRender(event) {
+    const newStream = event.detail.newStream
+    
+    // Solo procesamos streams que actualicen el contenedor del formulario
+    if (newStream.target === "patient_form_container") {
+      // Detectar si es edición o creación analizando el HTML
+      const formHTML = newStream.templateContent.querySelector("form")
+      
+      if (formHTML) {
+        // Verificar si es formulario de edición (buscando input hidden method=patch)
+        const isEdit = formHTML.querySelector('input[name="_method"][value="patch"]') !== null
+        
+        // Actualizar el título del modal
+        const modalTitle = document.getElementById("patient_modal_title")
+        if (modalTitle) {
+          if (isEdit) {
+            modalTitle.textContent = "Editar paciente"
+          } else {
+            modalTitle.textContent = "Nuevo paciente"
+          }
+        }
+      }
+    }
+  }
+  
+  // Método para abrir modal de nuevo paciente
+  openNewModal(event) {
+    if (event) {
+      event.preventDefault();
+    }
+    
+    // Abrimos el modal usando el API modal de Stimulus
+    const modalElement = document.getElementById("patient_modal");
+    if (!modalElement) return;
+    
+    const modalController = this.application.getControllerForElementAndIdentifier(modalElement, "modal");
+    if (modalController) {
+      modalController.openValue = true;
+      
+      // Mostrar loader mientras se carga el formulario
+      const formContainer = document.getElementById("patient_form_container");
+      if (formContainer) {
+        formContainer.innerHTML = this._getLoaderHTML();
+      }
+    }
+    
+    // Obtenemos los parámetros actuales de la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // Creamos un objeto para almacenar los parámetros
+    let queryParams = new URLSearchParams();
+    
+    // Agregamos la página actual si existe
+    const currentPage = urlParams.get('page');
+    if (currentPage) {
+      queryParams.append('page', currentPage);
+    }
+    
+    // Agregamos todos los parámetros de búsqueda (q[*])
+    urlParams.forEach((value, key) => {
+      if (key.startsWith('q[')) {
+        queryParams.append(key, value);
+      }
+    });
+    
+    // URL para nuevo paciente con parámetros
+    let url = this.hasNewUrlValue ? this.newUrlValue : '/patients/new';
+    url = `${url}${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
+    
+    // Log para depuración
+    console.log('URL para nuevo paciente:', url);
+    
+    // Cargamos el formulario con los parámetros
+    fetch(url, {
+      headers: {
+        "Accept": "text/vnd.turbo-stream.html"
+      }
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.text();
+      }
+      throw new Error('Network response was not ok');
+    })
+    .then(html => {
+      // Procesar la respuesta Turbo Stream manualmente
+      const template = document.createElement('template');
+      template.innerHTML = html;
+      
+      // Buscar y aplicar todos los turbo-stream en la respuesta
+      const turboStreams = template.content.querySelectorAll('turbo-stream');
+      turboStreams.forEach(stream => {
+        document.body.appendChild(stream);
+      });
+    })
+    .catch(error => console.error('Error cargando el formulario de nuevo paciente:', error));
+  }
+  
+  // Método para generar HTML del loader
+  _getLoaderHTML() {
+    return `
+      <div class="flex flex-col items-center justify-center w-full h-full min-h-[200px] p-8">
+        <div class="w-12 h-12 rounded-full border-4 border-t-4 border-gray-200 border-t-primary animate-spin"></div>
+        <p class="mt-4 text-sm text-neutral-dark font-medium">Cargando...</p>
+      </div>
+    `;
+  }
+}

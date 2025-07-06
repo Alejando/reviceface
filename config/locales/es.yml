@@ -1,4 +1,6 @@
 es:
+  general:
+    loading: "Cargando..."
   activerecord:
     models:
       user: "Usuario"
@@ -111,6 +113,8 @@ es:
     edit_exercise: "Editar Ejercicio"
   patients:
     new_patient: "Nuevo paciente"
+    edit_patient: "Editar paciente"
+    edit_patient_with_name: "Editar paciente: %{name}"
     name: "Nombre"
     age: "Edad"
     terms_and_conditions: "Términos y condiciones"

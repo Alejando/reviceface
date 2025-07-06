@@ -13,6 +13,15 @@ export default class extends Controller {
     clearTimeout(this.timeout)
 
     this.timeout = setTimeout(() => {
+      let pageInput = this.element.querySelector('input[name="page"]')
+      if (!pageInput) {
+        pageInput = document.createElement('input')
+        pageInput.type = 'hidden'
+        pageInput.name = 'page'
+        this.element.appendChild(pageInput)
+      }
+      pageInput.value = '1'
+      
       this.element.requestSubmit()
     }, 300) // 300ms debounce
   }
