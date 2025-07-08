@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class PatientsController < ApplicationController
+  include PaginatedCollection
   before_action :authenticate_user!
   before_action :set_patient, only: %i[edit update show]
 
@@ -107,7 +108,7 @@ class PatientsController < ApplicationController
         # Preparar título con nombre del paciente
         patient_name = @patient.user&.full_name || @patient.id.to_s
         modal_title = t('patients.edit_patient_with_name', name: patient_name)
-        
+
         render turbo_stream: [
           turbo_stream.update(
             "patient_form_container",
@@ -188,37 +189,15 @@ class PatientsController < ApplicationController
   end
 
   def set_patients_with_pagination(record = nil)
-    @q = current_clinic.patients.ransack(params[:q])
-    @q.sorts = "user_first_name asc" if @q.sorts.blank?
+    collection = current_clinic.patients.select("patients.*, users.first_name, users.last_name")
 
-    patients_relation = @q.result(distinct: true)
-                          .includes(user: { profile_photo_attachment: :blob })
-                          .select("patients.*, users.first_name, users.last_name")
-
-    if record
-      position = patients_relation.index(record)
-      page = (position / 10).ceil + 1
-      params[:page] = page
-    end
-
-    total_count = patients_relation.size
-    per_page = 10
-    total_pages = (total_count.to_f / per_page).ceil
-
-    requested_page = params[:page].to_i
-    requested_page = 1 if requested_page <= 0
-
-    if total_pages > 0 && requested_page > total_pages
-      requested_page = 1
-    end
-
-    @pagy, @patients = pagy(patients_relation, items: per_page, page: requested_page)
-  end
-
-  def pagination_and_search_params
-    {
-      page_param: params[:page],
-      search_params: params[:q]
+    options = {
+      default_sort: "user_first_name asc",
+      includes: { user: { profile_photo_attachment: :blob } },
+      per_page: 10,
+      record: record
     }
+
+    @pagy, @patients = set_paginated_collection(collection, **options)
   end
 end
